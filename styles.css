@@ -405,7 +405,7 @@ body.filter-active .current-class:not(.highlight-active)::after {
 	background: var(--accent-orange);
 	color: white;
 	border: 2px solid var(--deep-charcoal);
-	font-weight: 800;
+	font-weight: 500;
 	border-radius: 50px;
 	cursor: pointer;
 	z-index: 100;
