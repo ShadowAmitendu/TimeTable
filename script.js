@@ -58,3 +58,5 @@ function highlightCurrentClass() {
 
 setInterval(highlightCurrentClass, 30000);
 highlightCurrentClass();
+
+

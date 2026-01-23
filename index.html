@@ -1,218 +1,273 @@
+<!--
+================================================================================
+BCA 6th Semester Timetable - Techno College Hooghly
+================================================================================
+
+DESCRIPTION:
+    Interactive timetable web application for BCA 6th semester students at
+    Techno College Hooghly. Displays class schedule for Sections 6α and 6β
+    with real-time "NOW" indicator and faculty filtering.
+
+FEATURES:
+    - Real-time "NOW" indicator for current class
+    - Faculty filter to highlight specific professor's classes
+    - Print-optimized layout (A4 landscape)
+    - Responsive design for mobile devices
+    - Color-coded subjects for easy identification
+
+FILES:
+    - index.html  : Main HTML structure and timetable data
+    - styles.css  : All styling including print and responsive
+    - script.js   : Faculty filter and live class highlighting
+
+FACULTY CODES:
+    DB  - Prof. Deblina Banerjee
+    SM4 - Prof. Subhodip Moytra
+    AP  - Prof. Anik Patra
+    BD  - Prof. Basabdatta Das
+    RB  - Prof. Rajat Kumar Bhowmick
+    SB2 - Prof. Shubhasis Bagchi
+
+LAST UPDATED: January 19, 2026
+================================================================================
+-->
+
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>BCA 6th Sem Timetable | Techno College Hooghly</title>
-		<link
-			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap"
-			rel="stylesheet" />
-		<link rel="stylesheet" href="./styles.css" />
-	</head>
-	<body>
-		<button class="print-btn" onclick="window.print()">Print</button>
 
-		<header>
-			<h1>BCA 6th Semester — Room: 201</h1>
-			<h2>Techno College Hooghly | Section 6α & 6β</h2>
-		</header>
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>BCA 6th Sem Timetable | Techno College Hooghly</title>
 
-		<div class="faculty-filter-block">
-			<span class="filter-label">Quick Faculty Filter</span>
-			<div class="toggle-group">
-				<button class="prof-tab" onclick="toggleProf('DB', this)">
-					<span class="full-name">DB: PROF. DEBLINA BANERJEE</span>
-					<span class="short-name">DB</span>
-				</button>
-				<button class="prof-tab" onclick="toggleProf('SM4', this)">
-					<span class="full-name">SM4: PROF. SUBHODIP MOYTRA</span>
-					<span class="short-name">SM4</span>
-				</button>
-				<button class="prof-tab" onclick="toggleProf('AP', this)">
-					<span class="full-name">AP: PROF. ANIK PATRA</span>
-					<span class="short-name">AP</span>
-				</button>
-				<button class="prof-tab" onclick="toggleProf('BD', this)">
-					<span class="full-name">BD: PROF. BASABDATTA DAS</span>
-					<span class="short-name">BD</span>
-				</button>
-				<button class="prof-tab" onclick="toggleProf('RB', this)">
-					<span class="full-name">RB: PROF. RAJAT KUMAR BHOWMICK</span>
-					<span class="short-name">RB</span>
-				</button>
-				<button class="prof-tab" onclick="toggleProf('SB2', this)">
-					<span class="full-name">SB2: PROF. SHUBHASIS BAGCHI</span>
-					<span class="short-name">SB2</span>
-				</button>
-			</div>
+	<!-- Google Fonts: Inter (UI) and JetBrains Mono (subject codes) -->
+	<link
+		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap"
+		rel="stylesheet" />
+
+	<!-- Main Stylesheet -->
+	<link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+
+	<!-- ==================== PRINT BUTTON ==================== -->
+	<button class="print-btn" onclick="window.print()">Print</button>
+
+	<!-- ==================== HEADER ==================== -->
+	<header>
+		<h1>BCA 6th Semester | Room: 201</h1>
+		<h2>Techno College Hooghly | Section 6α & 6β</h2>
+	</header>
+
+	<!-- ==================== FACULTY FILTER ==================== -->
+	<!-- Quick filter buttons to highlight classes by professor -->
+	<div class="faculty-filter-block">
+		<span class="filter-label">Quick Faculty Filter</span>
+		<div class="toggle-group">
+			<!-- Each button shows full name on desktop, short code on mobile -->
+			<button class="prof-tab" onclick="toggleProf('DB', this)">
+				<span class="full-name">DB: PROF. DEBLINA BANERJEE</span>
+				<span class="short-name">DB</span>
+			</button>
+			<button class="prof-tab" onclick="toggleProf('SM4', this)">
+				<span class="full-name">SM4: PROF. SUBHODIP MOYTRA</span>
+				<span class="short-name">SM4</span>
+			</button>
+			<button class="prof-tab" onclick="toggleProf('AP', this)">
+				<span class="full-name">AP: PROF. ANIK PATRA</span>
+				<span class="short-name">AP</span>
+			</button>
+			<button class="prof-tab" onclick="toggleProf('BD', this)">
+				<span class="full-name">BD: PROF. BASABDATTA DAS</span>
+				<span class="short-name">BD</span>
+			</button>
+			<button class="prof-tab" onclick="toggleProf('RB', this)">
+				<span class="full-name">RB: PROF. RAJAT KUMAR BHOWMICK</span>
+				<span class="short-name">RB</span>
+			</button>
+			<button class="prof-tab" onclick="toggleProf('SB2', this)">
+				<span class="full-name">SB2: PROF. SHUBHASIS BAGCHI</span>
+				<span class="short-name">SB2</span>
+			</button>
 		</div>
+	</div>
 
-		<div class="table-wrapper">
-			<table>
-				<thead>
-					<tr>
-						<th style="width: 110px">Day</th>
-						<th data-start="10:40" data-end="11:30">
-							10:40 AM<br />-<br />11:30 AM
-						</th>
-						<th data-start="11:35" data-end="12:25">
-							11:35 AM<br />-<br />12:25 PM
-						</th>
-						<th data-start="12:30" data-end="13:20">
-							12:30 PM<br />-<br />01:20 PM
-						</th>
-						<th data-start="13:20" data-end="14:00">
-							01:20 PM<br />-<br />02:00 PM
-						</th>
-						<th data-start="14:00" data-end="14:50">
-							02:00 PM<br />-<br />02:50 PM
-						</th>
-						<th data-start="14:55" data-end="15:45">
-							02:55 PM<br />-<br />03:45 PM
-						</th>
-						<th data-start="15:50" data-end="16:40">
-							03:50 PM<br />-<br />04:40 PM
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td class="day">Sunday</td>
-						<td colspan="3" class="holiday">HOLIDAY</td>
-						<td class="break">---</td>
-						<td colspan="3" class="holiday">HOLIDAY</td>
-					</tr>
-					<tr>
-						<td class="day">Monday</td>
-						<td colspan="3" class="no-classes">NO CLASSES</td>
-						<td class="break">---</td>
-						<td colspan="3" class="no-classes">NO CLASSES</td>
-					</tr>
-					<tr data-day="2">
-						<td class="day">Tuesday</td>
-						<td class="mim602a" data-prof="SB2">
-							<span class="subject-tag">MIM602A</span
-							><span class="prof-id">SB2</span>
-						</td>
-						<td class="bcac601" data-prof="DB">
-							<span class="subject-tag">BCAC601</span
-							><span class="prof-id">DB</span>
-						</td>
-						<td class="bcac601" data-prof="DB">
-							<span class="subject-tag">BCAC601</span
-							><span class="prof-id">DB</span>
-						</td>
-						<td class="break">BREAK</td>
-						<td class="bcac691" data-prof="SM4">
-							<span class="subject-tag">BCAC691</span
-							><span class="prof-id">SM4</span
-							><span class="lab-tag">LAB 2</span>
-						</td>
-						<td class="bcac691" data-prof="SM4">
-							<span class="subject-tag">BCAC691</span
-							><span class="prof-id">SM4</span
-							><span class="lab-tag">LAB 2</span>
-						</td>
-						<td>----</td>
-					</tr>
-					<tr data-day="3">
-						<td class="day">Wednesday</td>
-						<td class="mim602a" data-prof="SB2">
-							<span class="subject-tag">MIM602A</span
-							><span class="prof-id">SB2</span>
-						</td>
-						<td class="mim601" data-prof="RB">
-							<span class="subject-tag">MIM601</span
-							><span class="prof-id">RB</span>
-						</td>
-						<td class="bcac601" data-prof="DB">
-							<span class="subject-tag">BCAC601</span
-							><span class="prof-id">DB</span>
-						</td>
-						<td class="break">BREAK</td>
-						<td class="bcac602" data-prof="AP">
-							<span class="subject-tag">BCAC602</span
-							><span class="prof-id">AP</span>
-						</td>
-						<td class="bcac602" data-prof="AP">
-							<span class="subject-tag">BCAC602</span
-							><span class="prof-id">AP</span>
-						</td>
-						<td>----</td>
-					</tr>
-					<tr data-day="4">
-						<td class="day">Thursday</td>
-						<td class="mim602a" data-prof="SB2">
-							<span class="subject-tag">MIM602A</span
-							><span class="prof-id">SB2</span>
-						</td>
-						<td class="mim601" data-prof="RB">
-							<span class="subject-tag">MIM601</span
-							><span class="prof-id">RB</span>
-						</td>
-						<td class="mim602a" data-prof="SB2">
-							<span class="subject-tag">SOFT SKILL</span
-							><span class="prof-id">SB2</span>
-						</td>
-						<td class="break">BREAK</td>
-						<td class="bcac692" data-prof="AP">
-							<span class="subject-tag">BCAC692</span
-							><span class="prof-id">AP</span><span class="lab-tag">LAB 1</span>
-						</td>
-						<td class="bcac692" data-prof="AP">
-							<span class="subject-tag">BCAC692</span
-							><span class="prof-id">AP</span><span class="lab-tag">LAB 1</span>
-						</td>
-						<td>----</td>
-					</tr>
-					<tr data-day="5">
-						<td class="day">Friday</td>
-						<td>----</td>
-						<td>----</td>
-						<td class="bcac602" data-prof="AP">
-							<span class="subject-tag">BCAC602</span
-							><span class="prof-id">AP</span>
-						</td>
-						<td class="break">BREAK</td>
-						<td class="mim601" data-prof="RB">
-							<span class="subject-tag">MIM601</span
-							><span class="prof-id">RB</span>
-						</td>
-						<td class="bcac603" data-prof="BD">
-							<span class="subject-tag">BCAC603</span
-							><span class="prof-id">BD</span>
-						</td>
-						<td class="bcac603" data-prof="BD">
-							<span class="subject-tag">BCAC603</span
-							><span class="prof-id">BD</span>
-						</td>
-					</tr>
-					<tr data-day="6">
-						<td class="day">Saturday</td>
-						<td class="mim602a" data-prof="SB2">
-							<span class="subject-tag">MIM602A</span
-							><span class="prof-id">SB2</span>
-						</td>
-						<td class="bcac603" data-prof="BD">
-							<span class="subject-tag">BCAC603</span
-							><span class="prof-id">BD</span>
-						</td>
-						<td class="bcac603" data-prof="BD">
-							<span class="subject-tag">BCAC603</span
-							><span class="prof-id">BD</span>
-						</td>
-						<td class="break">BREAK</td>
-						<td class="mim601" data-prof="RB">
-							<span class="subject-tag">MIM601</span
-							><span class="prof-id">RB</span>
-						</td>
-						<td>----</td>
-						<td>----</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+	<!-- ==================== TIMETABLE ==================== -->
+	<!-- 
+		Time slots: 10:40-11:30, 11:35-12:25, 12:30-1:20, BREAK, 2:00-2:50, 2:55-3:45, 3:50-4:40
+		Days: Sunday (holiday), Monday (no classes), Tuesday-Saturday (classes)
+		Each cell has data-prof attribute for filtering
+	-->
+	<div class="table-wrapper">
+		<table>
+			<!-- Table Header: Day column + 7 time slots -->
+			<thead>
+				<tr>
+					<th class="day-header">Day</th>
+					<th data-start="10:40" data-end="11:30">
+						10:40 AM<br />-<br />11:30 AM
+					</th>
+					<th data-start="11:35" data-end="12:25">
+						11:35 AM<br />-<br />12:25 PM
+					</th>
+					<th data-start="12:30" data-end="13:20">
+						12:30 PM<br />-<br />01:20 PM
+					</th>
+					<th data-start="13:20" data-end="14:00">
+						01:20 PM<br />-<br />02:00 PM
+					</th>
+					<th data-start="14:00" data-end="14:50">
+						02:00 PM<br />-<br />02:50 PM
+					</th>
+					<th data-start="14:55" data-end="15:45">
+						02:55 PM<br />-<br />03:45 PM
+					</th>
+					<th data-start="15:50" data-end="16:40">
+						03:50 PM<br />-<br />04:40 PM
+					</th>
+				</tr>
+			</thead>
 
-		<script src="./script.js"></script>
-	</body>
+			<!-- Table Body: Schedule Data -->
+			<tbody>
+				<!-- Sunday: Holiday -->
+				<tr>
+					<td class="day">Sunday</td>
+					<td colspan="3" class="holiday">HOLIDAY</td>
+					<td class="break">---</td>
+					<td colspan="3" class="holiday">HOLIDAY</td>
+				</tr>
+
+				<!-- Monday: No Classes -->
+				<tr>
+					<td class="day">Monday</td>
+					<td colspan="3" class="no-classes">NO CLASSES</td>
+					<td class="break">---</td>
+					<td colspan="3" class="no-classes">NO CLASSES</td>
+				</tr>
+
+				<!-- Tuesday (data-day="2") -->
+				<tr data-day="2">
+					<td class="day">Tuesday</td>
+					<td class="mim602a" data-prof="SB2">
+						<span class="subject-tag">MIM602A</span><span class="prof-id">SB2</span>
+					</td>
+					<td class="bcac601" data-prof="DB">
+						<span class="subject-tag">BCAC601</span><span class="prof-id">DB</span>
+					</td>
+					<td class="bcac601" data-prof="DB">
+						<span class="subject-tag">BCAC601</span><span class="prof-id">DB</span>
+					</td>
+					<td class="break">BREAK</td>
+					<td class="bcac691" data-prof="SM4">
+						<span class="subject-tag">BCAC691</span><span class="prof-id">SM4</span><span
+							class="lab-tag">LAB 2</span>
+					</td>
+					<td class="bcac691" data-prof="SM4">
+						<span class="subject-tag">BCAC691</span><span class="prof-id">SM4</span><span
+							class="lab-tag">LAB 2</span>
+					</td>
+					<td>----</td>
+				</tr>
+
+				<!-- Wednesday (data-day="3") -->
+				<tr data-day="3">
+					<td class="day">Wednesday</td>
+					<td class="mim602a" data-prof="SB2">
+						<span class="subject-tag">MIM602A</span><span class="prof-id">SB2</span>
+					</td>
+					<td class="mim601" data-prof="RB">
+						<span class="subject-tag">MIM601</span><span class="prof-id">RB</span>
+					</td>
+					<td class="bcac601" data-prof="DB">
+						<span class="subject-tag">BCAC601</span><span class="prof-id">DB</span>
+					</td>
+					<td class="break">BREAK</td>
+					<td class="bcac602" data-prof="AP">
+						<span class="subject-tag">BCAC602</span><span class="prof-id">AP</span>
+					</td>
+					<td class="bcac602" data-prof="AP">
+						<span class="subject-tag">BCAC602</span><span class="prof-id">AP</span>
+					</td>
+					<td>----</td>
+				</tr>
+
+				<!-- Thursday (data-day="4") -->
+				<tr data-day="4">
+					<td class="day">Thursday</td>
+					<td class="mim602a" data-prof="SB2">
+						<span class="subject-tag">MIM602A</span><span class="prof-id">SB2</span>
+					</td>
+					<td class="mim601" data-prof="RB">
+						<span class="subject-tag">MIM601</span><span class="prof-id">RB</span>
+					</td>
+					<td class="mim602a" data-prof="SB2">
+						<span class="subject-tag">SOFT SKILL</span><span class="prof-id">SB2</span>
+					</td>
+					<td class="break">BREAK</td>
+					<td class="bcac692" data-prof="AP">
+						<span class="subject-tag">BCAC692</span><span class="prof-id">AP</span><span class="lab-tag">LAB
+							1</span>
+					</td>
+					<td class="bcac692" data-prof="AP">
+						<span class="subject-tag">BCAC692</span><span class="prof-id">AP</span><span class="lab-tag">LAB
+							1</span>
+					</td>
+					<td>----</td>
+				</tr>
+
+				<!-- Friday (data-day="5") -->
+				<tr data-day="5">
+					<td class="day">Friday</td>
+					<td>----</td>
+					<td>----</td>
+					<td class="bcac602" data-prof="AP">
+						<span class="subject-tag">BCAC602</span><span class="prof-id">AP</span>
+					</td>
+					<td class="break">BREAK</td>
+					<td class="mim601" data-prof="RB">
+						<span class="subject-tag">MIM601</span><span class="prof-id">RB</span>
+					</td>
+					<td class="bcac603" data-prof="BD">
+						<span class="subject-tag">BCAC603</span><span class="prof-id">BD</span>
+					</td>
+					<td class="bcac603" data-prof="BD">
+						<span class="subject-tag">BCAC603</span><span class="prof-id">BD</span>
+					</td>
+				</tr>
+
+				<!-- Saturday (data-day="6") -->
+				<tr data-day="6">
+					<td class="day">Saturday</td>
+					<td class="mim602a" data-prof="SB2">
+						<span class="subject-tag">MIM602A</span><span class="prof-id">SB2</span>
+					</td>
+					<td class="bcac603" data-prof="BD">
+						<span class="subject-tag">BCAC603</span><span class="prof-id">BD</span>
+					</td>
+					<td class="bcac603" data-prof="BD">
+						<span class="subject-tag">BCAC603</span><span class="prof-id">BD</span>
+					</td>
+					<td class="break">BREAK</td>
+					<td class="mim601" data-prof="RB">
+						<span class="subject-tag">MIM601</span><span class="prof-id">RB</span>
+					</td>
+					<td>----</td>
+					<td>----</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- ==================== FOOTER STATUS BAR ==================== -->
+	<footer class="status-bar">
+		<span class="status-text">Routine As of Date: 19th January 2026</span>
+	</footer>
+
+	<!-- ==================== SCRIPTS ==================== -->
+	<script src="./script.js"></script>
+
+</body>
+
 </html>
