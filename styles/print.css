@@ -1,0 +1,169 @@
+/* Print styles */
+
+@page {
+    size: A4 landscape;
+    margin: 6mm;
+}
+
+@media print {
+
+    /* Global Reset */
+    body {
+        background: white !important;
+        zoom: 0.88;
+        overflow: hidden;
+    }
+
+    * {
+        box-shadow: none !important;
+        animation: none !important;
+    }
+
+    /* Hide Non-Print UI */
+    .print-btn,
+    .section-modal,
+    .controls-wrapper,
+    .settings-content {
+        display: none !important;
+    }
+
+    /* Header Compression */
+    header {
+        margin: 2mm 0 3mm 0;
+    }
+
+    h2 {
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        margin-bottom: 1px;
+    }
+
+    h1 {
+        font-size: 1.1rem;
+        margin-bottom: 1px;
+    }
+
+    header p {
+        font-size: 0.65rem;
+        margin-top: 2px;
+    }
+
+    /* Table Structure */
+    .table-wrapper {
+        padding: 10px;
+        border: none;
+    }
+
+    table {
+        width: 100%;
+        height: auto;
+        table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: 2px;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    th,
+    td {
+        border: 1.4px solid #334155 !important;
+        border-radius: 6px;
+        background: white !important;
+        padding: 4px 2px;
+        vertical-align: middle;
+    }
+
+    /* Time Header (Top Row) */
+    thead th {
+        font-size: 8px;
+        font-weight: 800;
+        line-height: 1.1;
+        padding: 3px 2px;
+        background: #E5E7EB !important;
+        color: #000 !important;
+    }
+
+    thead th:first-child {
+        text-align: center;
+    }
+
+    .time-block {
+        gap: 1px;
+    }
+
+    .time-sep {
+        font-size: 7px;
+    }
+
+    /* Row Height Control */
+    td {
+        height: 58px;
+        font-size: 8px;
+    }
+
+    .day {
+        font-size: 8px;
+        font-weight: 900;
+        text-align: center;
+        background: #E2E8F0 !important;
+    }
+
+    /* Double-Section Cell Compression */
+    .section-label-cell {
+        font-size: 7px;
+        margin-bottom: 1px;
+        line-height: 1;
+    }
+
+    .subject-tag {
+        font-size: 10px;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 1px;
+    }
+
+    .prof-id,
+    .lab-tag {
+        font-size: 8px;
+        padding: 1px 4px;
+        line-height: 1;
+    }
+
+    .divider {
+        margin: 2px 0;
+        border-top: 1px solid #CBD5E1;
+    }
+
+    /* Status Cells */
+    .break,
+    .holiday,
+    .no-classes {
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 0.05em;
+        border-style: dashed !important;
+    }
+
+    /* Current Class */
+    .current-class {
+        border: 2px solid #000 !important;
+    }
+
+    .current-class::before {
+        display: none !important;
+    }
+
+    /* Status Pill (Print) */
+    .status-pill {
+        margin: 3mm auto 4mm;
+        padding: 4px 16px;
+        background: #fff !important;
+        color: #000 !important;
+        border: 1.5px solid #334155;
+        border-radius: 999px;
+        font-size: 8px;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        box-shadow: none !important;
+    }
+}

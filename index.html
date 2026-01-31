@@ -1,777 +1,54 @@
+<!--
+  ============================================================================
+  BCA 6th Semester Timetable - Techno College Hooghly
+  ============================================================================
+  
+  @description  Interactive timetable application for BCA students
+  @version      2.0.0
+  @author       Amitendu Bikash Dhusiya
+  @updated      31 January 2026
+  
+  Features:
+  - Section switching (Alpha/Beta/Both)
+  - Faculty filtering
+  - Current class highlighting
+  - Print-friendly layout
+  - Responsive design
+  
+  Architecture:
+  - ES Modules (main.js) for modern browsers
+  - Inline fallback for file:// protocol
+  ============================================================================
+-->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BCA 6th Semester Timetable for Techno College Hooghly - Sections Alpha & Beta">
     <title>BCA 6th Sem Timetable | Techno College Hooghly</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
         rel="stylesheet">
 
-    <style>
-        :root {
-            --bg-cream: #FDFCF9;
-            --bg-tan: #F1EAD9;
-            --accent-orange: #D97706;
-            --accent-hover: #B45309;
-            --deep-charcoal: #1E293B;
-            --border-color: #E2E8F0;
-            --text-main: #0F172A;
-            --radius: 16px;
-            --cell-height: 105px;
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-cream);
-            color: var(--text-main);
-            margin: 0;
-            padding: 15px;
-            -webkit-font-smoothing: antialiased;
-            font-size: 16px;
-            /* Slightly increased base size */
-        }
-
-        header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            margin: 24px auto 20px;
-            width: 100%;
-        }
-
-        header h1,
-        header h2,
-        header p {
-            text-align: center;
-            width: 100%;
-        }
-
-        h1 {
-            font-size: 1rem;
-            /* Increased from 1.8rem */
-            font-weight: 800;
-            color: var(--deep-charcoal);
-            margin: 0;
-            text-transform: uppercase;
-        }
-
-        h2 {
-            font-size: 0.9rem;
-            /* Increased from 0.8rem */
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--accent-orange);
-            margin-bottom: 5px;
-        }
-
-        .controls-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 25px;
-        }
-
-        .controls-toggle {
-            background: var(--deep-charcoal);
-            color: white;
-            border: none;
-            border-radius: 100px;
-            padding: 10px 24px;
-            font-weight: 700;
-            font-size: 14px;
-            /* Increased from 12px */
-            text-transform: uppercase;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: var(--shadow-md);
-            transition: all 0.2s;
-        }
-
-        .controls-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .settings-content {
-            display: none;
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin: 0 auto 30px;
-            max-width: 1100px;
-            box-shadow: var(--shadow-md);
-        }
-
-        .settings-content.show {
-            display: block;
-            animation: slideDown 0.3s ease-out;
-        }
-
-        .settings-row {
-            margin-bottom: 20px;
-        }
-
-        .settings-label {
-            display: block;
-            font-size: 12px;
-            /* Increased from 11px */
-            font-weight: 800;
-            text-transform: uppercase;
-            color: #64748b;
-            margin-bottom: 12px;
-        }
-
-        /* Custom Dropdown */
-        .custom-select-container {
-            position: relative;
-            max-width: 300px;
-        }
-
-        .select-styled {
-            background: white;
-            border: 1px solid var(--border-color);
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 15px;
-            /* Increased from 14px */
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.2s;
-        }
-
-        .select-styled:hover {
-            border-color: var(--accent-orange);
-        }
-
-        .select-options {
-            display: none;
-            position: absolute;
-            top: calc(100% + 5px);
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            z-index: 100;
-            box-shadow: var(--shadow-md);
-            overflow: hidden;
-        }
-
-        .select-options.show {
-            display: block;
-        }
-
-        .option {
-            padding: 12px 16px;
-            font-size: 15px;
-            /* Increased from 14px */
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .option:hover {
-            background: #F8FAFC;
-            color: var(--accent-orange);
-        }
-
-        /* Faculty Grid */
-        .faculty-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
-            gap: 8px;
-        }
-
-        .prof-tab {
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            background: white;
-            font-weight: 700;
-            font-size: 14px;
-            /* Increased from 12px */
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .prof-tab:hover {
-            border-color: var(--accent-orange);
-            transform: translateY(-1px);
-        }
-
-        .prof-tab.active {
-            background: var(--accent-orange);
-            color: white;
-            border-color: var(--accent-orange);
-        }
-
-        /* Table */
-        .table-wrapper {
-            background: white;
-            padding: 10px;
-            border-radius: 14px;
-            border: 1px solid var(--border-color);
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 6px;
-            min-width: 1000px;
-        }
-
-        thead th {
-            color: #94a3b8;
-            font-size: 14px;
-            /* Increased from 10px */
-            font-weight: 700;
-            text-transform: uppercase;
-            padding-bottom: 10px;
-        }
-
-        .time-block {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-        }
-
-        .time-sep {
-            font-size: 14px;
-            /* Increased from 12px */
-            color: #cbd5e1;
-        }
-
-        td {
-            border-radius: 12px;
-            background: #F8FAFC;
-            text-align: center;
-            height: var(--cell-height);
-            position: relative;
-            transition: all 0.2s;
-        }
-
-        .day {
-            background: var(--bg-tan) !important;
-            font-weight: 800;
-            font-size: 14px;
-            /* Increased from 11px */
-            width: 100px;
-        }
-
-        /* Cell Content */
-        .section-label-cell {
-            font-size: 14px;
-            /* Increased from 9px */
-            font-weight: 900;
-            color: var(--accent-orange);
-            text-transform: uppercase;
-            margin-bottom: 2px;
-        }
-
-        .subject-tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-            /* Increased from 12px */
-            font-weight: 700;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .prof-id {
-            font-size: 14px;
-            /* Increased from 10px */
-            font-weight: 700;
-            background: rgba(0, 0, 0, 0.05);
-            padding: 2px 6px;
-            border-radius: 5px;
-            color: #475569;
-        }
-
-        .lab-tag {
-            font-size: 14px;
-            /* Increased from 10px */
-            font-weight: 700;
-            color: #059669;
-            background: rgba(5, 150, 105, 0.1);
-            padding: 2px 6px;
-            border-radius: 5px;
-            margin-left: 4px;
-        }
-
-        .divider {
-            border: 0;
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
-            margin: 6px 0;
-        }
-
-        /* Statuses */
-        .break {
-            background: #F1F5F9 !important;
-            color: #94A3B8;
-            font-size: 16px;
-            /* Increased from 10px */
-            font-weight: 700;
-            letter-spacing: 0.1em;
-        }
-
-        .holiday {
-            background: #FEF2F2 !important;
-            color: #EF4444;
-            font-size: 16px;
-            /* Increased from 11px */
-            font-weight: 800;
-        }
-
-        .no-classes {
-            background: #FAFAFA !important;
-            color: #1d1d1d;
-            font-size: 16px;
-            /* Increased from 11px */
-            font-weight: 700;
-        }
-
-        .dimmed {
-            opacity: 0.2;
-            filter: grayscale(1);
-        }
-
-        .highlight-active {
-            border: 2px solid var(--accent-orange) !important;
-        }
-
-        body.filter-active .current-class:not(.highlight-active)::before {
-            display: none;
-        }
-
-        body.filter-active .current-class:not(.highlight-active) {
-            border: 2px solid #F8FAFC !important;
-        }
-
-        .highlight-active.current-class::before {
-            display: none;
-        }
-
-        /* LIVE Indicator */
-        .current-class {
-            border: 2px solid var(--deep-charcoal) !important;
-        }
-
-        .current-class::before {
-            content: "LIVE";
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--deep-charcoal);
-            color: white;
-            font-size: 9px;
-            font-weight: 900;
-            padding: 2px 8px;
-            border-radius: 20px;
-            z-index: 10;
-            animation: pulse 2s infinite;
-        }
-
-        /* Print Button */
-        .print-btn {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            padding: 14px 28px;
-            background: var(--accent-orange);
-            color: white;
-            border: 2px solid var(--deep-charcoal);
-            font-weight: 800;
-            border-radius: 50px;
-            cursor: pointer;
-            z-index: 100;
-            box-shadow: var(--shadow-md);
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .print-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Modal */
-        .section-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            -webkit-backdrop-filter: blur(4px);
-            backdrop-filter: blur(4px);
-        }
-
-        .modal-content {
-            background: var(--bg-cream);
-            border: 3px solid var(--border-color);
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-title {
-            font-size: 24px;
-            font-weight: 800;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            color: var(--deep-charcoal);
-        }
-
-        .modal-subtitle {
-            font-size: 15px;
-            /* Increased from 14px */
-            opacity: 0.6;
-            margin-bottom: 30px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .modal-btn {
-            padding: 16px 24px;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: white;
-            background: var(--accent-orange);
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            letter-spacing: 0.5px;
-        }
-
-        .modal-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
-        }
-
-        .settings-hidden {
-            display: none;
-        }
-
-        @keyframes pulse {
-            0% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.6;
-            }
-
-            100% {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* FORCE EQUAL COLUMN WIDTHS */
-        table {
-            table-layout: fixed;
-        }
-
-        /* Day column fixed */
-        th:first-child,
-        td.day {
-            width: 110px;
-        }
-
-        /* All time-slot columns equal width */
-        thead th:not(:first-child),
-        tbody td:not(.day) {
-            width: calc((100% - 110px) / 7);
-        }
-
-        /* =====================
-   STATUS PILL (SCREEN)
-===================== */
-
-        .status-pill {
-            margin: 12px auto 18px;
-            padding: 8px 22px;
-            width: fit-content;
-
-            background: #fff7ed;
-            color: #92400e;
-
-            border: 1.5px solid #f59e0b;
-            border-radius: 999px;
-
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-
-            box-shadow: var(--shadow-md);
-        }
-
-
-        @page {
-            size: A4 landscape;
-            margin: 6mm;
-        }
-
-        @media print {
-
-            /* =====================
-       GLOBAL RESET
-    ====================== */
-
-            body {
-                background: white !important;
-                zoom: 0.88;
-                /* Critical for single-page fit */
-                overflow: hidden;
-            }
-
-            * {
-                box-shadow: none !important;
-                animation: none !important;
-            }
-
-            /* =====================
-       HIDE NON-PRINT UI
-    ====================== */
-
-            .print-btn,
-            .section-modal,
-            .controls-wrapper,
-            .settings-content {
-                display: none !important;
-            }
-
-            /* =====================
-       HEADER COMPRESSION
-    ====================== */
-
-            header {
-                margin: 2mm 0 3mm 0;
-            }
-
-            h2 {
-                font-size: 0.7rem;
-                letter-spacing: 0.12em;
-                margin-bottom: 1px;
-            }
-
-            h1 {
-                font-size: 1.1rem;
-                margin-bottom: 1px;
-            }
-
-            header p {
-                font-size: 0.65rem;
-                margin-top: 2px;
-            }
-
-            /* =====================
-       TABLE STRUCTURE
-    ====================== */
-
-            .table-wrapper {
-                padding: 10px;
-                border: none;
-            }
-
-            table {
-                width: 100%;
-                height: auto;
-                table-layout: fixed;
-                border-collapse: separate;
-                border-spacing: 2px;
-                /* Reduced spacing */
-                page-break-inside: avoid;
-                break-inside: avoid;
-            }
-
-            th,
-            td {
-                border: 1.4px solid #334155 !important;
-                border-radius: 6px;
-                background: white !important;
-                padding: 4px 2px;
-                vertical-align: middle;
-            }
-
-            /* =====================
-       TIME HEADER (TOP ROW)
-    ====================== */
-
-            thead th {
-                font-size: 8px;
-                font-weight: 800;
-                line-height: 1.1;
-                padding: 3px 2px;
-                background: #E5E7EB !important;
-                color: #000 !important;
-            }
-
-            .time-block {
-                gap: 1px;
-            }
-
-            .time-sep {
-                font-size: 7px;
-            }
-
-            /* =====================
-       ROW HEIGHT CONTROL
-    ====================== */
-
-            td {
-                height: 58px;
-                /* Critical height */
-                font-size: 8px;
-            }
-
-            .day {
-                font-size: 8px;
-                font-weight: 900;
-                background: #E2E8F0 !important;
-            }
-
-            /* =====================
-       DOUBLE-SECTION CELL COMPRESSION
-    ====================== */
-
-            .section-label-cell {
-                font-size: 7px;
-                margin-bottom: 1px;
-                line-height: 1;
-            }
-
-            .subject-tag {
-                font-size: 10px;
-                font-weight: 800;
-                line-height: 1.1;
-                margin-bottom: 1px;
-            }
-
-            .prof-id,
-            .lab-tag {
-                font-size: 8px;
-                padding: 1px 4px;
-                line-height: 1;
-            }
-
-            .divider {
-                margin: 2px 0;
-                border-top: 1px solid #CBD5E1;
-            }
-
-            /* =====================
-       STATUS CELLS
-    ====================== */
-
-            .break,
-            .holiday,
-            .no-classes {
-                font-size: 9px;
-                font-weight: 900;
-                letter-spacing: 0.05em;
-                border-style: dashed !important;
-            }
-
-            /* =====================
-       CURRENT CLASS
-    ====================== */
-
-            .current-class {
-                border: 2px solid #000 !important;
-            }
-
-            .current-class::before {
-                display: none !important;
-            }
-
-            /* =====================
-                STATUS PILL (PRINT)
-                ===================== */
-
-            .status-pill {
-                margin: 3mm auto 4mm;
-                padding: 4px 16px;
-
-                background: #fff !important;
-                color: #000 !important;
-
-                border: 1.5px solid #334155;
-                border-radius: 999px;
-
-                font-size: 8px;
-                font-weight: 900;
-                letter-spacing: 0.12em;
-
-                box-shadow: none !important;
-            }
-
-        }
-
-        .table-wrapper {
-            @media (max-width: 600px) {
-                .faculty-grid {
-                    grid-template-columns: repeat(3, 1fr);
-                }
-
-                h1 {
-                    font-size: 1.4rem;
-                    /* Slightly larger mobile font */
-                }
-            }
-        }
-    </style>
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/layout.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/print.css" media="print">
 </head>
 
 <body>
-
-    <!-- Modal for first-time selection -->
+    <!-- ======================== Section Selection Modal ======================== -->
+    <!-- Displays on page load to let user choose which section(s) to view -->
     <div class="section-modal" id="sectionModal">
         <div class="modal-content">
-            <div class="modal-title">Welcome! </div>
+            <div class="modal-title">Welcome!</div>
             <div class="modal-subtitle">Please select which section timetable you want to view</div>
             <div class="modal-buttons">
                 <button class="modal-btn" onclick="selectFromModal('both')">Both Sections (α & β)</button>
@@ -781,8 +58,9 @@
         </div>
     </div>
 
-    <!-- Print Button -->
-    <button class="print-btn" onclick="window.print()">
+    <!-- ======================== Print Button ======================== -->
+    <!-- Note: Event listener attached via JS in printMode.js -->
+    <button class="print-btn" aria-label="Print timetable">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="6 9 6 2 18 2 18 9"></polyline>
@@ -792,14 +70,18 @@
         Print
     </button>
 
+    <!-- ======================== Main Content Area ======================== -->
     <div id="contentArea" class="settings-hidden">
+
+        <!-- Header -->
         <header>
             <h2>Techno College Hooghly</h2>
             <h1>BCA 6th Sem • Room 201</h1>
         </header>
 
+        <!-- ======================== Settings Toggle ======================== -->
         <div class="controls-wrapper">
-            <button class="controls-toggle" onclick="toggleSettings()">
+            <button class="controls-toggle" onclick="toggleSettings()" aria-label="Toggle settings panel">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                     stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="3"></circle>
@@ -811,7 +93,10 @@
             </button>
         </div>
 
+        <!-- ======================== Settings Panel ======================== -->
+        <!-- Contains section switcher and faculty filter controls -->
         <div class="settings-content" id="settingsPanel">
+            <!-- Section Selector -->
             <div class="settings-row">
                 <span class="settings-label">Switch Section</span>
                 <div class="custom-select-container">
@@ -831,6 +116,7 @@
                 </div>
             </div>
 
+            <!-- Faculty Filter -->
             <div class="settings-row">
                 <span class="settings-label">Filter Faculty</span>
                 <div class="faculty-grid">
@@ -844,6 +130,11 @@
             </div>
         </div>
 
+        <!-- ======================== Timetable ======================== -->
+        <!-- 
+            Time slots with data-start/data-end attributes for current class highlighting.
+            Table body is dynamically populated by JavaScript.
+        -->
         <div class="table-wrapper">
             <table>
                 <thead>
@@ -880,51 +171,101 @@
                     </tr>
                 </thead>
                 <tbody id="timetableBody"></tbody>
-                <div class="status-pill">
-                    ROUTINE AS OF DATE: <strong>2nd February 2026</strong>
-                </div>
-
             </table>
+            <!-- Status indicator showing last update date -->
+            <div class="status-pill">ROUTINE AS OF DATE: <strong>2nd February 2026</strong></div>
         </div>
     </div>
 
-    <script>
+    <!-- ======================== Scripts ======================== -->
+
+    <!-- ES Module Entry Point (GitHub Pages / Web Server) -->
+    <script type="module" src="main.js"></script>
+
+    <!-- Fallback Script (file:// protocol / local development only) -->
+    <script nomodule>
+        /**
+         * Schedule data for both sections (Alpha & Beta)
+         * Keys are day indices (2=Tuesday, 3=Wednesday, etc.)
+         * Values are arrays of 7 time slots per day
+         * @type {Object.<string, Object.<number, Array>>}
+         */
         const scheduleData = {
             alpha: {
-                2: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'DB', subject: 'BCAC601' }, { prof: 'DB', subject: 'BCAC601' }, 'BREAK', { prof: 'SM4', subject: 'BCAC691', lab: 'LAB 2' }, { prof: 'SM4', subject: 'BCAC691', lab: 'LAB 2' }, 'EMPTY'],
+                2: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'DB', subject: 'BCAC601' }, { prof: 'DB', subject: 'BCAC601' }, 'BREAK', { prof: 'SM4', subject: 'BCAC691', lab: 'L2' }, { prof: 'SM4', subject: 'BCAC691', lab: 'L2' }, 'EMPTY'],
                 3: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'RB', subject: 'MIM601' }, { prof: 'DB', subject: 'BCAC601' }, 'BREAK', { prof: 'AP', subject: 'BCAC602' }, { prof: 'AP', subject: 'BCAC602' }, 'EMPTY'],
-                4: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'RB', subject: 'MIM601' }, { prof: 'SB2', subject: 'SOFT SKILL' }, 'BREAK', { prof: 'AP', subject: 'BCAC692', lab: 'LAB 1' }, { prof: 'AP', subject: 'BCAC692', lab: 'LAB 1' }, 'EMPTY'],
+                4: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'RB', subject: 'MIM601' }, { prof: 'SB2', subject: 'soft skill' }, 'BREAK', { prof: 'AP', subject: 'BCAC692', lab: 'L1' }, { prof: 'AP', subject: 'BCAC692', lab: 'L1' }, 'EMPTY'],
                 5: ['EMPTY', 'EMPTY', { prof: 'AP', subject: 'BCAC602' }, 'BREAK', { prof: 'RB', subject: 'MIM601' }, { prof: 'BD', subject: 'BCAC603' }, { prof: 'BD', subject: 'BCAC603' }],
                 6: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'BD', subject: 'BCAC603' }, { prof: 'BD', subject: 'BCAC603' }, 'BREAK', { prof: 'RB', subject: 'MIM601' }, 'EMPTY', 'EMPTY']
             },
             beta: {
-                2: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'DB', subject: 'BCAC601' }, { prof: 'DB', subject: 'BCAC601' }, 'BREAK', { prof: 'AP', subject: 'BCAC692', lab: 'LAB 1' }, { prof: 'AP', subject: 'BCAC692', lab: 'LAB 1' }, 'EMPTY'],
+                2: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'DB', subject: 'BCAC601' }, { prof: 'DB', subject: 'BCAC601' }, 'BREAK', { prof: 'AP', subject: 'BCAC692', lab: 'L1' }, { prof: 'AP', subject: 'BCAC692', lab: 'L1' }, 'EMPTY'],
                 3: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'RB', subject: 'MIM601' }, { prof: 'DB', subject: 'BCAC601' }, 'BREAK', { prof: 'AP', subject: 'BCAC602' }, { prof: 'AP', subject: 'BCAC602' }, 'EMPTY'],
-                4: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'RB', subject: 'MIM601' }, { prof: 'SB2', subject: 'SOFT SKILL' }, 'BREAK', 'EMPTY', 'EMPTY', 'EMPTY'],
-                5: [{ prof: 'SM4', subject: 'BCAC691', lab: 'LAB 2' }, { prof: 'SM4', subject: 'BCAC691', lab: 'LAB 2' }, { prof: 'AP', subject: 'BCAC602' }, 'BREAK', { prof: 'RB', subject: 'MIM601' }, { prof: 'BD', subject: 'BCAC603' }, { prof: 'BD', subject: 'BCAC603' }],
+                4: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'RB', subject: 'MIM601' }, { prof: 'SB2', subject: 'soft skill' }, 'BREAK', 'EMPTY', 'EMPTY', 'EMPTY'],
+                5: [{ prof: 'SM4', subject: 'BCAC691', lab: 'L2' }, { prof: 'SM4', subject: 'BCAC691', lab: 'L2' }, { prof: 'AP', subject: 'BCAC602' }, 'BREAK', { prof: 'RB', subject: 'MIM601' }, { prof: 'BD', subject: 'BCAC603' }, { prof: 'BD', subject: 'BCAC603' }],
                 6: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'BD', subject: 'BCAC603' }, { prof: 'BD', subject: 'BCAC603' }, 'BREAK', { prof: 'RB', subject: 'MIM601' }, 'EMPTY', 'EMPTY']
             }
         };
 
+        /** @type {'both'|'alpha'|'beta'} Currently selected section */
         let currentSection = 'both';
 
-        // Always show section modal on page load
-        function loadSectionPreference() {
-            document.getElementById('sectionModal').style.display = 'flex';
+        /** Cookie expiration time in minutes */
+        const COOKIE_EXPIRY_MINUTES = 30;
+
+        /**
+         * Set a cookie with expiration time
+         * @param {string} name - Cookie name
+         * @param {string} value - Cookie value
+         * @param {number} minutes - Expiration time in minutes
+         */
+        function setCookie(name, value, minutes) {
+            const expires = new Date(Date.now() + minutes * 60 * 1000).toUTCString();
+            document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires};path=/;SameSite=Lax`;
         }
 
+        /**
+         * Get a cookie value by name
+         * @param {string} name - Cookie name
+         * @returns {string|null} Cookie value or null if not found/expired
+         */
+        function getCookie(name) {
+            const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
+            return match ? decodeURIComponent(match[2]) : null;
+        }
+
+        /** Shows modal only if cookie expired, otherwise restores saved section */
+        function loadSectionPreference() {
+            const savedSection = getCookie('selectedSection');
+            if (savedSection) {
+                // Cookie still valid - skip modal
+                document.getElementById('sectionModal').style.display = 'none';
+                document.getElementById('contentArea').classList.remove('settings-hidden');
+                currentSection = savedSection;
+                document.getElementById('selectedVal').textContent = getSectionText(savedSection);
+                renderSchedule();
+            } else {
+                // Cookie expired - show modal
+                document.getElementById('sectionModal').style.display = 'flex';
+            }
+        }
+
+        /**
+         * Converts section value to display text
+         * @param {'both'|'alpha'|'beta'} val - Section identifier
+         * @returns {string} Human-readable section name
+         */
         function getSectionText(val) {
-            const texts = {
-                'both': 'Both (α & β)',
-                'alpha': 'Section α (Alpha)',
-                'beta': 'Section β (Beta)'
-            };
+            const texts = { 'both': 'Both (α & β)', 'alpha': 'Section α (Alpha)', 'beta': 'Section β (Beta)' };
             return texts[val] || 'Both (α & β)';
         }
 
-        // Select from modal
+        /**
+         * Handles section selection from the welcome modal
+         * @param {'both'|'alpha'|'beta'} section - Selected section
+         */
         function selectFromModal(section) {
-            localStorage.setItem('selectedSection', section);
+            setCookie('selectedSection', section, COOKIE_EXPIRY_MINUTES);
             document.getElementById('sectionModal').style.display = 'none';
             document.getElementById('contentArea').classList.remove('settings-hidden');
             currentSection = section;
@@ -932,6 +273,7 @@
             renderSchedule();
         }
 
+        /** Toggles the settings panel visibility */
         function toggleSettings() {
             const panel = document.getElementById('settingsPanel');
             const text = document.getElementById('toggleText');
@@ -939,60 +281,85 @@
             text.textContent = panel.classList.contains('show') ? 'Hide Options' : 'Options';
         }
 
+        /** Toggles the section dropdown menu */
         function toggleDropdown() {
             document.getElementById('selectOptions').classList.toggle('show');
         }
 
+        /**
+         * Updates section selection and re-renders the timetable
+         * @param {'both'|'alpha'|'beta'} val - Section identifier
+         * @param {string} text - Display text for the selection
+         */
         function updateSelection(val, text) {
             currentSection = val;
-            localStorage.setItem('selectedSection', val);
+            setCookie('selectedSection', val, COOKIE_EXPIRY_MINUTES);
             document.getElementById('selectedVal').textContent = text;
             document.getElementById('selectOptions').classList.remove('show');
             renderSchedule();
         }
 
+        /**
+         * Check if two classes are the same (same subject and professor)
+         * @param {Object|string} a - First class data
+         * @param {Object|string} b - Second class data
+         * @returns {boolean} True if same class
+         */
+        function isSameClass(a, b) {
+            if (typeof a === 'string' || typeof b === 'string') return false;
+            if (!a || !b) return false;
+            return a.subject === b.subject && a.prof === b.prof;
+        }
+
+        /**
+         * Renders the timetable based on current section selection
+         * Generates HTML rows for each day with appropriate cells
+         */
         function renderSchedule() {
             const tbody = document.getElementById('timetableBody');
             const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+            // Static rows for Sunday (holiday) and Monday (no classes)
             let html = `<tr><td class="day">Sunday</td><td colspan="3" class="holiday">HOLIDAY</td><td class="break">---</td><td colspan="3" class="holiday">HOLIDAY</td></tr>`;
             html += `<tr><td class="day">Monday</td><td colspan="3" class="no-classes">NO CLASSES</td><td class="break">---</td><td colspan="3" class="no-classes">NO CLASSES</td></tr>`;
 
+            // Dynamic rows for Tuesday (2) through Saturday (6)
             for (let i = 2; i <= 6; i++) {
                 html += `<tr data-day="${i}"><td class="day">${days[i]}</td>`;
                 for (let slot = 0; slot < 7; slot++) {
                     const alpha = scheduleData.alpha[i][slot];
                     const beta = scheduleData.beta[i][slot];
 
-                    if (alpha === 'BREAK') {
-                        html += `<td class="break">BREAK</td>`;
-                        continue;
-                    }
+                    if (alpha === 'BREAK') { html += `<td class="break">BREAK</td>`; continue; }
 
                     if (currentSection === 'both') {
-                        if (alpha === 'EMPTY' || !alpha) {
+                        const alphaIsEmpty = alpha === 'EMPTY' || !alpha;
+                        const betaIsEmpty = beta === 'EMPTY' || !beta;
+
+                        // Both empty - show ---
+                        if (alphaIsEmpty && betaIsEmpty) {
                             html += `<td>---</td>`;
-                        } else {
+                        }
+                        // Same class in both sections - show merged single cell
+                        else if (isSameClass(alpha, beta)) {
+                            html += `<td data-prof="${alpha.prof}"><span class="subject-tag">${alpha.subject}</span><span class="prof-id">${alpha.prof}</span>${alpha.lab ? `<span class="lab-tag">${alpha.lab}</span>` : ''}</td>`;
+                        }
+                        // Different classes - show split cell with α and β
+                        else {
                             html += `<td data-section="both">
                                 <div class="section-label-cell">α</div>
-                                <span class="subject-tag">${alpha.subject}</span>
-                                <span class="prof-id">${alpha.prof}</span>
-                                ${alpha.lab ? `<span class="lab-tag">${alpha.lab}</span>` : ''}
+                                ${alphaIsEmpty ? '<span class="subject-tag empty-class">No Class</span>' : `<span class="subject-tag">${alpha.subject}</span><span class="prof-id">${alpha.prof}</span>${alpha.lab ? `<span class="lab-tag">${alpha.lab}</span>` : ''}`}
                                 <hr class="divider">
                                 <div class="section-label-cell">β</div>
-                                <span class="subject-tag">${beta.subject}</span>
-                                <span class="prof-id">${beta.prof}</span>
-                                ${beta.lab ? `<span class="lab-tag">${beta.lab}</span>` : ''}
+                                ${betaIsEmpty ? '<span class="subject-tag empty-class">No Class</span>' : `<span class="subject-tag">${beta.subject}</span><span class="prof-id">${beta.prof}</span>${beta.lab ? `<span class="lab-tag">${beta.lab}</span>` : ''}`}
                             </td>`;
                         }
                     } else {
                         const data = scheduleData[currentSection][i][slot];
-                        if (data === 'EMPTY' || !data) html += `<td>---</td>`;
-                        else {
-                            html += `<td data-prof="${data.prof}">
-                                <span class="subject-tag">${data.subject}</span>
-                                <span class="prof-id">${data.prof}</span>
-                                ${data.lab ? `<span class="lab-tag">${data.lab}</span>` : ''}
-                            </td>`;
+                        if (data === 'EMPTY' || !data) {
+                            html += `<td>---</td>`;
+                        } else {
+                            html += `<td data-prof="${data.prof}"><span class="subject-tag">${data.subject}</span><span class="prof-id">${data.prof}</span>${data.lab ? `<span class="lab-tag">${data.lab}</span>` : ''}</td>`;
                         }
                     }
                 }
@@ -1002,14 +369,20 @@
             highlightCurrentClass();
         }
 
+        /**
+         * Highlights the current ongoing class based on system time
+         * Compares current time against time slot data attributes
+         */
         function highlightCurrentClass() {
             const now = new Date();
             const curDay = now.getDay();
             const curTime = now.getHours() * 60 + now.getMinutes();
             const headers = document.querySelectorAll('thead th');
 
+            // Remove existing highlights
             document.querySelectorAll('.current-class').forEach(el => el.classList.remove('current-class'));
 
+            // Find and highlight current time slot
             document.querySelectorAll('tbody tr').forEach(row => {
                 if (parseInt(row.dataset.day) === curDay) {
                     const cells = row.querySelectorAll('td');
@@ -1017,10 +390,7 @@
                         if (index === 0 || !th.dataset.start) return;
                         const [startH, startM] = th.dataset.start.split(':').map(Number);
                         const [endH, endM] = th.dataset.end.split(':').map(Number);
-                        const startTime = startH * 60 + startM;
-                        const endTime = endH * 60 + endM;
-
-                        if (curTime >= startTime && curTime < endTime) {
+                        if (curTime >= startH * 60 + startM && curTime < endH * 60 + endM) {
                             cells[index].classList.add('current-class');
                         }
                     });
@@ -1028,6 +398,11 @@
             });
         }
 
+        /**
+         * Toggles faculty filter - highlights classes taught by selected professor
+         * @param {string} profId - Professor's ID (e.g., 'DB', 'AP')
+         * @param {HTMLElement} btn - The clicked filter button
+         */
         function toggleProf(profId, btn) {
             const isActive = btn.classList.contains('active');
             document.querySelectorAll('.prof-tab').forEach(t => t.classList.remove('active'));
@@ -1037,20 +412,17 @@
                 document.body.classList.add('filter-active');
                 btn.classList.add('active');
                 document.querySelectorAll('td').forEach(td => {
-                    if (td.innerText.includes(profId)) {
-                        td.classList.add('highlight-active');
-                    } else if (td.innerText !== '---' && !td.classList.contains('day') && !td.classList.contains('break') && !td.classList.contains('holiday') && !td.classList.contains('no-classes')) {
-                        td.classList.add('dimmed');
-                    }
+                    if (td.innerText.includes(profId)) td.classList.add('highlight-active');
+                    else if (td.innerText !== '---' && !td.classList.contains('day') && !td.classList.contains('break') && !td.classList.contains('holiday') && !td.classList.contains('no-classes')) td.classList.add('dimmed');
                 });
             } else {
                 document.body.classList.remove('filter-active');
             }
         }
 
-        // Initialize
+        // Initialize application
         loadSectionPreference();
-        setInterval(highlightCurrentClass, 30000);
+        setInterval(highlightCurrentClass, 30000); // Update every 30 seconds
     </script>
 </body>
 
