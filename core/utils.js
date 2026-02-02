@@ -14,7 +14,7 @@
  * const modal = $('sectionModal');
  */
 export function $(id) {
-    return document.getElementById(id);
+	return document.getElementById(id);
 }
 
 /**
@@ -25,7 +25,7 @@ export function $(id) {
  * const buttons = $$('.prof-tab');
  */
 export function $$(selector) {
-    return document.querySelectorAll(selector);
+	return document.querySelectorAll(selector);
 }
 
 /**
@@ -41,31 +41,31 @@ export function $$(selector) {
  * const cell = createElement('td', { dataset: { day: '2' } }, [textNode]);
  */
 export function createElement(tag, attributes = {}, children = []) {
-    const element = document.createElement(tag);
+	const element = document.createElement(tag);
 
-    Object.entries(attributes).forEach(([key, value]) => {
-        if (key === 'className') {
-            element.className = value;
-        } else if (key === 'dataset') {
-            Object.entries(value).forEach(([dataKey, dataValue]) => {
-                element.dataset[dataKey] = dataValue;
-            });
-        } else if (key.startsWith('on') && typeof value === 'function') {
-            element.addEventListener(key.slice(2).toLowerCase(), value);
-        } else {
-            element.setAttribute(key, value);
-        }
-    });
+	Object.entries(attributes).forEach(([key, value]) => {
+		if (key === "className") {
+			element.className = value;
+		} else if (key === "dataset") {
+			Object.entries(value).forEach(([dataKey, dataValue]) => {
+				element.dataset[dataKey] = dataValue;
+			});
+		} else if (key.startsWith("on") && typeof value === "function") {
+			element.addEventListener(key.slice(2).toLowerCase(), value);
+		} else {
+			element.setAttribute(key, value);
+		}
+	});
 
-    children.forEach(child => {
-        if (typeof child === 'string') {
-            element.appendChild(document.createTextNode(child));
-        } else if (child instanceof Node) {
-            element.appendChild(child);
-        }
-    });
+	children.forEach((child) => {
+		if (typeof child === "string") {
+			element.appendChild(document.createTextNode(child));
+		} else if (child instanceof Node) {
+			element.appendChild(child);
+		}
+	});
 
-    return element;
+	return element;
 }
 
 /**
@@ -76,7 +76,7 @@ export function createElement(tag, attributes = {}, children = []) {
  * @returns {boolean} Whether class is now present
  */
 export function toggleClass(element, className, force) {
-    return element.classList.toggle(className, force);
+	return element.classList.toggle(className, force);
 }
 
 /**
@@ -85,7 +85,7 @@ export function toggleClass(element, className, force) {
  * @param {...string} classNames - Classes to add
  */
 export function addClass(element, ...classNames) {
-    element.classList.add(...classNames);
+	element.classList.add(...classNames);
 }
 
 /**
@@ -94,5 +94,5 @@ export function addClass(element, ...classNames) {
  * @param {...string} classNames - Classes to remove
  */
 export function removeClass(element, ...classNames) {
-    element.classList.remove(...classNames);
+	element.classList.remove(...classNames);
 }

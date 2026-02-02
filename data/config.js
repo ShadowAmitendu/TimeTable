@@ -17,11 +17,11 @@
  * @property {string} routineDate - Date when schedule was last updated
  */
 export const CONFIG = Object.freeze({
-    college: "Techno College Hooghly",
-    course: "BCA",
-    semester: 6,
-    room: "201",
-    routineDate: "2nd February 2026"
+	college: "Techno College Hooghly",
+	course: "BCA",
+	semester: 6,
+	room: "201",
+	routineDate: "2nd February 2026",
 });
 
 /**
@@ -30,7 +30,7 @@ export const CONFIG = Object.freeze({
  * @type {Object.<string, string>}
  */
 export const SECTION_TEXT = Object.freeze({
-    'both': 'Both (α & β)',
-    'alpha': 'Section α (Alpha)',
-    'beta': 'Section β (Beta)'
+	both: "Both Alpha & Beta",
+	alpha: "Section (Alpha)",
+	beta: "Section (Beta)",
 });

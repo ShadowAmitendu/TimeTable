@@ -18,12 +18,12 @@
  * @type {FacultyMember[]}
  */
 export const FACULTY = Object.freeze([
-    { id: 'DB', name: 'DB' },
-    { id: 'SM4', name: 'SM4' },
-    { id: 'AP', name: 'AP' },
-    { id: 'BD', name: 'BD' },
-    { id: 'RB', name: 'RB' },
-    { id: 'SB2', name: 'SB2' }
+	{ id: "DB", name: "DB" },
+	{ id: "SM4", name: "SM4" },
+	{ id: "AP", name: "AP" },
+	{ id: "BD", name: "BD" },
+	{ id: "RB", name: "RB" },
+	{ id: "SB2", name: "SB2" },
 ]);
 
 /**
@@ -34,7 +34,7 @@ export const FACULTY = Object.freeze([
  * const prof = getFacultyById('DB'); // { id: 'DB', name: 'DB' }
  */
 export function getFacultyById(id) {
-    return FACULTY.find(f => f.id === id);
+	return FACULTY.find((f) => f.id === id);
 }
 
 /**
@@ -44,5 +44,5 @@ export function getFacultyById(id) {
  * const ids = getAllFacultyIds(); // ['DB', 'SM4', 'AP', ...]
  */
 export function getAllFacultyIds() {
-    return FACULTY.map(f => f.id);
+	return FACULTY.map((f) => f.id);
 }

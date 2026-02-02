@@ -2,428 +2,620 @@
   ============================================================================
   BCA 6th Semester Timetable - Techno College Hooghly
   ============================================================================
-  
+
   @description  Interactive timetable application for BCA students
-  @version      2.0.0
+  @version      2.1.1
   @author       Amitendu Bikash Dhusiya
   @updated      31 January 2026
-  
+
   Features:
   - Section switching (Alpha/Beta/Both)
   - Faculty filtering
   - Current class highlighting
   - Print-friendly layout
   - Responsive design
-  
+
   Architecture:
   - ES Modules (main.js) for modern browsers
   - Inline fallback for file:// protocol
   ============================================================================
 -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			name="description"
+			content="BCA 6th Semester Timetable for Techno College Hooghly - Sections Alpha & Beta" />
+		<title>BCA 6th Sem Timetable | Techno College Hooghly</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="BCA 6th Semester Timetable for Techno College Hooghly - Sections Alpha & Beta">
-    <title>BCA 6th Sem Timetable | Techno College Hooghly</title>
+		<!-- Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
+			rel="stylesheet" />
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
-        rel="stylesheet">
+		<!-- Stylesheets -->
+		<link rel="stylesheet" href="styles/base.css" />
+		<link rel="stylesheet" href="styles/layout.css" />
+		<link rel="stylesheet" href="styles/components.css" />
+		<link rel="stylesheet" href="styles/print.css" media="print" />
+	</head>
 
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="styles/base.css">
-    <link rel="stylesheet" href="styles/layout.css">
-    <link rel="stylesheet" href="styles/components.css">
-    <link rel="stylesheet" href="styles/print.css" media="print">
-</head>
+	<body>
+		<!-- ======================== Section Selection Modal ======================== -->
+		<!-- Displays on page load to let user choose which section(s) to view -->
+		<div class="section-modal" id="sectionModal">
+			<div class="modal-content">
+				<div class="modal-title">Welcome!</div>
+				<div class="modal-subtitle">
+					Please select which section timetable you want to view
+				</div>
+				<div class="modal-buttons">
+					<button class="modal-btn" onclick="selectFromModal('both')">
+						Both Sections (α & β)
+					</button>
+					<button class="modal-btn" onclick="selectFromModal('alpha')">
+						Section α (Alpha)
+					</button>
+					<button class="modal-btn" onclick="selectFromModal('beta')">
+						Section β (Beta)
+					</button>
+				</div>
+			</div>
+		</div>
 
-<body>
-    <!-- ======================== Section Selection Modal ======================== -->
-    <!-- Displays on page load to let user choose which section(s) to view -->
-    <div class="section-modal" id="sectionModal">
-        <div class="modal-content">
-            <div class="modal-title">Welcome!</div>
-            <div class="modal-subtitle">Please select which section timetable you want to view</div>
-            <div class="modal-buttons">
-                <button class="modal-btn" onclick="selectFromModal('both')">Both Sections (α & β)</button>
-                <button class="modal-btn" onclick="selectFromModal('alpha')">Section α (Alpha)</button>
-                <button class="modal-btn" onclick="selectFromModal('beta')">Section β (Beta)</button>
-            </div>
-        </div>
-    </div>
+		<!-- ======================== Print Button ======================== -->
+		<!-- Note: Event listener attached via JS in printMode.js -->
+		<button class="print-btn" aria-label="Print timetable">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="20"
+				height="20"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round">
+				<polyline points="6 9 6 2 18 2 18 9"></polyline>
+				<path
+					d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+				<rect x="6" y="14" width="12" height="8"></rect>
+			</svg>
+			Print
+		</button>
 
-    <!-- ======================== Print Button ======================== -->
-    <!-- Note: Event listener attached via JS in printMode.js -->
-    <button class="print-btn" aria-label="Print timetable">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 6 2 18 2 18 9"></polyline>
-            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-            <rect x="6" y="14" width="12" height="8"></rect>
-        </svg>
-        Print
-    </button>
+		<!-- ======================== Main Content Area ======================== -->
+		<div id="contentArea" class="settings-hidden">
+			<!-- Header -->
+			<header>
+				<h2>Techno College Hooghly</h2>
+				<h1>BCA 6th Sem • Room 201</h1>
+			</header>
 
-    <!-- ======================== Main Content Area ======================== -->
-    <div id="contentArea" class="settings-hidden">
+			<!-- ======================== Settings Toggle ======================== -->
+			<div class="controls-wrapper">
+				<button
+					class="controls-toggle"
+					onclick="toggleSettings()"
+					aria-label="Toggle settings panel">
+					<svg
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2.5"
+						stroke-linecap="round"
+						stroke-linejoin="round">
+						<circle cx="12" cy="12" r="3"></circle>
+						<path
+							d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+					</svg>
+					<span id="toggleText">Options</span>
+				</button>
+			</div>
 
-        <!-- Header -->
-        <header>
-            <h2>Techno College Hooghly</h2>
-            <h1>BCA 6th Sem • Room 201</h1>
-        </header>
+			<!-- ======================== Settings Panel ======================== -->
+			<!-- Contains section switcher and faculty filter controls -->
+			<div class="settings-content" id="settingsPanel">
+				<!-- Section Selector -->
+				<div class="settings-row">
+					<span class="settings-label">Switch Section</span>
+					<div class="custom-select-container">
+						<div class="select-styled" onclick="toggleDropdown()">
+							<span id="selectedVal">Both (α & β)</span>
+							<svg
+								width="12"
+								height="12"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="3"
+								stroke-linecap="round"
+								stroke-linejoin="round">
+								<polyline points="6 9 12 15 18 9"></polyline>
+							</svg>
+						</div>
+						<div class="select-options" id="selectOptions">
+							<div
+								class="option"
+								onclick="updateSelection('both', 'Both (α & β)')">
+								Both (α & β)
+							</div>
+							<div
+								class="option"
+								onclick="updateSelection('alpha', 'Section α (Alpha)')">
+								Section α (Alpha)
+							</div>
+							<div
+								class="option"
+								onclick="updateSelection('beta', 'Section β (Beta)')">
+								Section β (Beta)
+							</div>
+						</div>
+					</div>
+				</div>
 
-        <!-- ======================== Settings Toggle ======================== -->
-        <div class="controls-wrapper">
-            <button class="controls-toggle" onclick="toggleSettings()" aria-label="Toggle settings panel">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path
-                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-                    </path>
-                </svg>
-                <span id="toggleText">Options</span>
-            </button>
-        </div>
+				<!-- Faculty Filter -->
+				<div class="settings-row">
+					<span class="settings-label">Filter Faculty</span>
+					<div class="faculty-grid">
+						<button class="prof-tab" onclick="toggleProf('DB', this)">
+							DB
+						</button>
+						<button class="prof-tab" onclick="toggleProf('SM4', this)">
+							SM4
+						</button>
+						<button class="prof-tab" onclick="toggleProf('AP', this)">
+							AP
+						</button>
+						<button class="prof-tab" onclick="toggleProf('BD', this)">
+							BD
+						</button>
+						<button class="prof-tab" onclick="toggleProf('RB', this)">
+							RB
+						</button>
+						<button class="prof-tab" onclick="toggleProf('SB2', this)">
+							SB2
+						</button>
+					</div>
+				</div>
+			</div>
 
-        <!-- ======================== Settings Panel ======================== -->
-        <!-- Contains section switcher and faculty filter controls -->
-        <div class="settings-content" id="settingsPanel">
-            <!-- Section Selector -->
-            <div class="settings-row">
-                <span class="settings-label">Switch Section</span>
-                <div class="custom-select-container">
-                    <div class="select-styled" onclick="toggleDropdown()">
-                        <span id="selectedVal">Both (α & β)</span>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </div>
-                    <div class="select-options" id="selectOptions">
-                        <div class="option" onclick="updateSelection('both', 'Both (α & β)')">Both (α & β)</div>
-                        <div class="option" onclick="updateSelection('alpha', 'Section α (Alpha)')">Section α (Alpha)
-                        </div>
-                        <div class="option" onclick="updateSelection('beta', 'Section β (Beta)')">Section β (Beta)</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Faculty Filter -->
-            <div class="settings-row">
-                <span class="settings-label">Filter Faculty</span>
-                <div class="faculty-grid">
-                    <button class="prof-tab" onclick="toggleProf('DB', this)">DB</button>
-                    <button class="prof-tab" onclick="toggleProf('SM4', this)">SM4</button>
-                    <button class="prof-tab" onclick="toggleProf('AP', this)">AP</button>
-                    <button class="prof-tab" onclick="toggleProf('BD', this)">BD</button>
-                    <button class="prof-tab" onclick="toggleProf('RB', this)">RB</button>
-                    <button class="prof-tab" onclick="toggleProf('SB2', this)">SB2</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ======================== Timetable ======================== -->
-        <!-- 
+			<!-- ======================== Timetable ======================== -->
+			<!--
             Time slots with data-start/data-end attributes for current class highlighting.
             Table body is dynamically populated by JavaScript.
         -->
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Day</th>
-                        <th data-start="10:40" data-end="11:30">
-                            <div class="time-block"><span>10:40 AM</span><span class="time-sep">-</span><span>11:30
-                                    AM</span></div>
-                        </th>
-                        <th data-start="11:35" data-end="12:25">
-                            <div class="time-block"><span>11:35 AM</span><span class="time-sep">-</span><span>12:25
-                                    PM</span></div>
-                        </th>
-                        <th data-start="12:30" data-end="13:20">
-                            <div class="time-block"><span>12:30 PM</span><span class="time-sep">-</span><span>01:20
-                                    PM</span></div>
-                        </th>
-                        <th data-start="13:20" data-end="14:00">
-                            <div class="time-block"><span>01:20 PM</span><span class="time-sep">-</span><span>02:00
-                                    PM</span></div>
-                        </th>
-                        <th data-start="14:00" data-end="14:50">
-                            <div class="time-block"><span>02:00 PM</span><span class="time-sep">-</span><span>02:50
-                                    PM</span></div>
-                        </th>
-                        <th data-start="14:55" data-end="15:45">
-                            <div class="time-block"><span>02:55 PM</span><span class="time-sep">-</span><span>03:45
-                                    PM</span></div>
-                        </th>
-                        <th data-start="15:50" data-end="16:40">
-                            <div class="time-block"><span>03:50 PM</span><span class="time-sep">-</span><span>04:40
-                                    PM</span></div>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="timetableBody"></tbody>
-            </table>
-            <!-- Status indicator showing last update date -->
-            <div class="status-pill">ROUTINE AS OF DATE: <strong>2nd February 2026</strong></div>
-        </div>
-    </div>
+			<div class="table-wrapper">
+				<table>
+					<thead>
+						<tr>
+							<th>Day</th>
+							<th data-start="10:40" data-end="11:30">
+								<div class="time-block">
+									<span>10:40 AM</span><span class="time-sep">-</span
+									><span>11:30 AM</span>
+								</div>
+							</th>
+							<th data-start="11:35" data-end="12:25">
+								<div class="time-block">
+									<span>11:35 AM</span><span class="time-sep">-</span
+									><span>12:25 PM</span>
+								</div>
+							</th>
+							<th data-start="12:30" data-end="13:20">
+								<div class="time-block">
+									<span>12:30 PM</span><span class="time-sep">-</span
+									><span>01:20 PM</span>
+								</div>
+							</th>
+							<th data-start="13:20" data-end="14:00">
+								<div class="time-block">
+									<span>01:20 PM</span><span class="time-sep">-</span
+									><span>02:00 PM</span>
+								</div>
+							</th>
+							<th data-start="14:00" data-end="14:50">
+								<div class="time-block">
+									<span>02:00 PM</span><span class="time-sep">-</span
+									><span>02:50 PM</span>
+								</div>
+							</th>
+							<th data-start="14:55" data-end="15:45">
+								<div class="time-block">
+									<span>02:55 PM</span><span class="time-sep">-</span
+									><span>03:45 PM</span>
+								</div>
+							</th>
+							<th data-start="15:50" data-end="16:40">
+								<div class="time-block">
+									<span>03:50 PM</span><span class="time-sep">-</span
+									><span>04:40 PM</span>
+								</div>
+							</th>
+						</tr>
+					</thead>
+					<tbody id="timetableBody"></tbody>
+				</table>
+				<!-- Status indicator showing last update date -->
+				<div class="status-pill">
+					ROUTINE AS OF DATE: <strong>2nd February 2026</strong>
+				</div>
+			</div>
+		</div>
 
-    <!-- ======================== Scripts ======================== -->
+		<!-- ======================== Scripts ======================== -->
 
-    <!-- ES Module Entry Point (GitHub Pages / Web Server) -->
-    <script type="module" src="main.js"></script>
+		<!-- ES Module Entry Point (GitHub Pages / Web Server) -->
+		<script type="module" src="main.js"></script>
 
-    <!-- Fallback Script (file:// protocol / local development only) -->
-    <script nomodule>
-        /**
-         * Schedule data for both sections (Alpha & Beta)
-         * Keys are day indices (2=Tuesday, 3=Wednesday, etc.)
-         * Values are arrays of 7 time slots per day
-         * @type {Object.<string, Object.<number, Array>>}
-         */
-        const scheduleData = {
-            alpha: {
-                2: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'DB', subject: 'BCAC601' }, { prof: 'DB', subject: 'BCAC601' }, 'BREAK', { prof: 'SM4', subject: 'BCAC691', lab: 'L2' }, { prof: 'SM4', subject: 'BCAC691', lab: 'L2' }, 'EMPTY'],
-                3: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'RB', subject: 'MIM601' }, { prof: 'DB', subject: 'BCAC601' }, 'BREAK', { prof: 'AP', subject: 'BCAC602' }, { prof: 'AP', subject: 'BCAC602' }, 'EMPTY'],
-                4: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'RB', subject: 'MIM601' }, { prof: 'SB2', subject: 'SOFT SKILLS' }, 'BREAK', { prof: 'AP', subject: 'BCAC692', lab: 'L1' }, { prof: 'AP', subject: 'BCAC692', lab: 'L1' }, 'EMPTY'],
-                5: ['EMPTY', 'EMPTY', { prof: 'AP', subject: 'BCAC602' }, 'BREAK', { prof: 'RB', subject: 'MIM601' }, { prof: 'BD', subject: 'BCAC603' }, { prof: 'BD', subject: 'BCAC603' }],
-                6: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'BD', subject: 'BCAC603' }, { prof: 'BD', subject: 'BCAC603' }, 'BREAK', { prof: 'RB', subject: 'MIM601' }, 'EMPTY', 'EMPTY']
-            },
-            beta: {
-                2: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'DB', subject: 'BCAC601' }, { prof: 'DB', subject: 'BCAC601' }, 'BREAK', { prof: 'AP', subject: 'BCAC692', lab: 'L1' }, { prof: 'AP', subject: 'BCAC692', lab: 'L1' }, 'EMPTY'],
-                3: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'RB', subject: 'MIM601' }, { prof: 'DB', subject: 'BCAC601' }, 'BREAK', { prof: 'AP', subject: 'BCAC602' }, { prof: 'AP', subject: 'BCAC602' }, 'EMPTY'],
-                4: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'RB', subject: 'MIM601' }, { prof: 'SB2', subject: 'soft skill' }, 'BREAK', 'EMPTY', 'EMPTY', 'EMPTY'],
-                5: [{ prof: 'SM4', subject: 'BCAC691', lab: 'L2' }, { prof: 'SM4', subject: 'BCAC691', lab: 'L2' }, { prof: 'AP', subject: 'BCAC602' }, 'BREAK', { prof: 'RB', subject: 'MIM601' }, { prof: 'BD', subject: 'BCAC603' }, { prof: 'BD', subject: 'BCAC603' }],
-                6: [{ prof: 'SB2', subject: 'MIM602A' }, { prof: 'BD', subject: 'BCAC603' }, { prof: 'BD', subject: 'BCAC603' }, 'BREAK', { prof: 'RB', subject: 'MIM601' }, 'EMPTY', 'EMPTY']
-            }
-        };
+		<!-- Fallback Script (file:// protocol / local development only) -->
+		<script nomodule>
+			/**
+			 * Schedule data for both sections (Alpha & Beta)
+			 * Keys are day indices (2=Tuesday, 3=Wednesday, etc.)
+			 * Values are arrays of 7 time slots per day
+			 * @type {Object.<string, Object.<number, Array>>}
+			 */
+			const scheduleData = {
+				alpha: {
+					2: [
+						{ prof: "SB2", subject: "MIM602A" },
+						{ prof: "DB", subject: "BCAC601" },
+						{ prof: "DB", subject: "BCAC601" },
+						"BREAK",
+						{ prof: "SM4", subject: "BCAC691", lab: "L2" },
+						{ prof: "SM4", subject: "BCAC691", lab: "L2" },
+						"EMPTY",
+					],
+					3: [
+						{ prof: "SB2", subject: "MIM602A" },
+						{ prof: "RB", subject: "MIM601" },
+						{ prof: "DB", subject: "BCAC601" },
+						"BREAK",
+						{ prof: "AP", subject: "BCAC602" },
+						{ prof: "AP", subject: "BCAC602" },
+						"EMPTY",
+					],
+					4: [
+						{ prof: "SB2", subject: "MIM602A" },
+						{ prof: "RB", subject: "MIM601" },
+						{ prof: "SB2", subject: "SOFT SKILLS" },
+						"BREAK",
+						{ prof: "AP", subject: "BCAC692", lab: "L1" },
+						{ prof: "AP", subject: "BCAC692", lab: "L1" },
+						"EMPTY",
+					],
+					5: [
+						"EMPTY",
+						"EMPTY",
+						{ prof: "AP", subject: "BCAC602" },
+						"BREAK",
+						{ prof: "RB", subject: "MIM601" },
+						{ prof: "BD", subject: "BCAC603" },
+						{ prof: "BD", subject: "BCAC603" },
+					],
+					6: [
+						{ prof: "SB2", subject: "MIM602A" },
+						{ prof: "BD", subject: "BCAC603" },
+						{ prof: "BD", subject: "BCAC603" },
+						"BREAK",
+						{ prof: "RB", subject: "MIM601" },
+						"EMPTY",
+						"EMPTY",
+					],
+				},
+				beta: {
+					2: [
+						{ prof: "SB2", subject: "MIM602A" },
+						{ prof: "DB", subject: "BCAC601" },
+						{ prof: "DB", subject: "BCAC601" },
+						"BREAK",
+						{ prof: "AP", subject: "BCAC692", lab: "L1" },
+						{ prof: "AP", subject: "BCAC692", lab: "L1" },
+						"EMPTY",
+					],
+					3: [
+						{ prof: "SB2", subject: "MIM602A" },
+						{ prof: "RB", subject: "MIM601" },
+						{ prof: "DB", subject: "BCAC601" },
+						"BREAK",
+						{ prof: "AP", subject: "BCAC602" },
+						{ prof: "AP", subject: "BCAC602" },
+						"EMPTY",
+					],
+					4: [
+						{ prof: "SB2", subject: "MIM602A" },
+						{ prof: "RB", subject: "MIM601" },
+						{ prof: "SB2", subject: "soft skill" },
+						"BREAK",
+						"EMPTY",
+						"EMPTY",
+						"EMPTY",
+					],
+					5: [
+						{ prof: "SM4", subject: "BCAC691", lab: "L2" },
+						{ prof: "SM4", subject: "BCAC691", lab: "L2" },
+						{ prof: "AP", subject: "BCAC602" },
+						"BREAK",
+						{ prof: "RB", subject: "MIM601" },
+						{ prof: "BD", subject: "BCAC603" },
+						{ prof: "BD", subject: "BCAC603" },
+					],
+					6: [
+						{ prof: "SB2", subject: "MIM602A" },
+						{ prof: "BD", subject: "BCAC603" },
+						{ prof: "BD", subject: "BCAC603" },
+						"BREAK",
+						{ prof: "RB", subject: "MIM601" },
+						"EMPTY",
+						"EMPTY",
+					],
+				},
+			};
 
-        /** @type {'both'|'alpha'|'beta'} Currently selected section */
-        let currentSection = 'both';
+			/** @type {'both'|'alpha'|'beta'} Currently selected section */
+			let currentSection = "both";
 
-        /** Cookie expiration time in minutes */
-        const COOKIE_EXPIRY_MINUTES = 30;
+			/** Cookie expiration time in minutes */
+			const COOKIE_EXPIRY_MINUTES = 30;
 
-        /**
-         * Set a cookie with expiration time
-         * @param {string} name - Cookie name
-         * @param {string} value - Cookie value
-         * @param {number} minutes - Expiration time in minutes
-         */
-        function setCookie(name, value, minutes) {
-            const expires = new Date(Date.now() + minutes * 60 * 1000).toUTCString();
-            document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires};path=/;SameSite=Lax`;
-        }
+			/**
+			 * Set a cookie with expiration time
+			 * @param {string} name - Cookie name
+			 * @param {string} value - Cookie value
+			 * @param {number} minutes - Expiration time in minutes
+			 */
+			function setCookie(name, value, minutes) {
+				const expires = new Date(
+					Date.now() + minutes * 60 * 1000,
+				).toUTCString();
+				document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires};path=/;SameSite=Lax`;
+			}
 
-        /**
-         * Get a cookie value by name
-         * @param {string} name - Cookie name
-         * @returns {string|null} Cookie value or null if not found/expired
-         */
-        function getCookie(name) {
-            const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
-            return match ? decodeURIComponent(match[2]) : null;
-        }
+			/**
+			 * Get a cookie value by name
+			 * @param {string} name - Cookie name
+			 * @returns {string|null} Cookie value or null if not found/expired
+			 */
+			function getCookie(name) {
+				const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
+				return match ? decodeURIComponent(match[2]) : null;
+			}
 
-        /** Shows modal only if cookie expired, otherwise restores saved section */
-        function loadSectionPreference() {
-            const savedSection = getCookie('selectedSection');
-            if (savedSection) {
-                // Cookie still valid - skip modal
-                document.getElementById('sectionModal').style.display = 'none';
-                document.getElementById('contentArea').classList.remove('settings-hidden');
-                currentSection = savedSection;
-                document.getElementById('selectedVal').textContent = getSectionText(savedSection);
-                renderSchedule();
-            } else {
-                // Cookie expired - show modal
-                document.getElementById('sectionModal').style.display = 'flex';
-            }
-        }
+			/** Shows modal only if cookie expired, otherwise restores saved section */
+			function loadSectionPreference() {
+				const savedSection = getCookie("selectedSection");
+				if (savedSection) {
+					// Cookie still valid - skip modal
+					document.getElementById("sectionModal").style.display = "none";
+					document
+						.getElementById("contentArea")
+						.classList.remove("settings-hidden");
+					currentSection = savedSection;
+					document.getElementById("selectedVal").textContent =
+						getSectionText(savedSection);
+					renderSchedule();
+				} else {
+					// Cookie expired - show modal
+					document.getElementById("sectionModal").style.display = "flex";
+				}
+			}
 
-        /**
-         * Converts section value to display text
-         * @param {'both'|'alpha'|'beta'} val - Section identifier
-         * @returns {string} Human-readable section name
-         */
-        function getSectionText(val) {
-            const texts = { 'both': 'Both (α & β)', 'alpha': 'Section α (Alpha)', 'beta': 'Section β (Beta)' };
-            return texts[val] || 'Both (α & β)';
-        }
+			/**
+			 * Converts section value to display text
+			 * @param {'both'|'alpha'|'beta'} val - Section identifier
+			 * @returns {string} Human-readable section name
+			 */
+			function getSectionText(val) {
+				const texts = {
+					both: "Both (α & β)",
+					alpha: "Section α (Alpha)",
+					beta: "Section β (Beta)",
+				};
+				return texts[val] || "Both (α & β)";
+			}
 
-        /**
-         * Handles section selection from the welcome modal
-         * @param {'both'|'alpha'|'beta'} section - Selected section
-         */
-        function selectFromModal(section) {
-            setCookie('selectedSection', section, COOKIE_EXPIRY_MINUTES);
-            document.getElementById('sectionModal').style.display = 'none';
-            document.getElementById('contentArea').classList.remove('settings-hidden');
-            currentSection = section;
-            updateSelection(section, getSectionText(section));
-            renderSchedule();
-        }
+			/**
+			 * Handles section selection from the welcome modal
+			 * @param {'both'|'alpha'|'beta'} section - Selected section
+			 */
+			function selectFromModal(section) {
+				setCookie("selectedSection", section, COOKIE_EXPIRY_MINUTES);
+				document.getElementById("sectionModal").style.display = "none";
+				document
+					.getElementById("contentArea")
+					.classList.remove("settings-hidden");
+				currentSection = section;
+				updateSelection(section, getSectionText(section));
+				renderSchedule();
+			}
 
-        /** Toggles the settings panel visibility */
-        function toggleSettings() {
-            const panel = document.getElementById('settingsPanel');
-            const text = document.getElementById('toggleText');
-            panel.classList.toggle('show');
-            text.textContent = panel.classList.contains('show') ? 'Hide Options' : 'Options';
-        }
+			/** Toggles the settings panel visibility */
+			function toggleSettings() {
+				const panel = document.getElementById("settingsPanel");
+				const text = document.getElementById("toggleText");
+				panel.classList.toggle("show");
+				text.textContent = panel.classList.contains("show")
+					? "Hide Options"
+					: "Options";
+			}
 
-        /** Toggles the section dropdown menu */
-        function toggleDropdown() {
-            document.getElementById('selectOptions').classList.toggle('show');
-        }
+			/** Toggles the section dropdown menu */
+			function toggleDropdown() {
+				document.getElementById("selectOptions").classList.toggle("show");
+			}
 
-        /**
-         * Updates section selection and re-renders the timetable
-         * @param {'both'|'alpha'|'beta'} val - Section identifier
-         * @param {string} text - Display text for the selection
-         */
-        function updateSelection(val, text) {
-            currentSection = val;
-            setCookie('selectedSection', val, COOKIE_EXPIRY_MINUTES);
-            document.getElementById('selectedVal').textContent = text;
-            document.getElementById('selectOptions').classList.remove('show');
-            renderSchedule();
-        }
+			/**
+			 * Updates section selection and re-renders the timetable
+			 * @param {'both'|'alpha'|'beta'} val - Section identifier
+			 * @param {string} text - Display text for the selection
+			 */
+			function updateSelection(val, text) {
+				currentSection = val;
+				setCookie("selectedSection", val, COOKIE_EXPIRY_MINUTES);
+				document.getElementById("selectedVal").textContent = text;
+				document.getElementById("selectOptions").classList.remove("show");
+				renderSchedule();
+			}
 
-        /**
-         * Check if two classes are the same (same subject and professor)
-         * @param {Object|string} a - First class data
-         * @param {Object|string} b - Second class data
-         * @returns {boolean} True if same class
-         */
-        function isSameClass(a, b) {
-            if (typeof a === 'string' || typeof b === 'string') return false;
-            if (!a || !b) return false;
-            return a.subject === b.subject && a.prof === b.prof;
-        }
+			/**
+			 * Check if two classes are the same (same subject and professor)
+			 * @param {Object|string} a - First class data
+			 * @param {Object|string} b - Second class data
+			 * @returns {boolean} True if same class
+			 */
+			function isSameClass(a, b) {
+				if (typeof a === "string" || typeof b === "string") return false;
+				if (!a || !b) return false;
+				return a.subject === b.subject && a.prof === b.prof;
+			}
 
-        /**
-         * Renders the timetable based on current section selection
-         * Generates HTML rows for each day with appropriate cells
-         */
-        function renderSchedule() {
-            const tbody = document.getElementById('timetableBody');
-            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+			/**
+			 * Renders the timetable based on current section selection
+			 * Generates HTML rows for each day with appropriate cells
+			 */
+			function renderSchedule() {
+				const tbody = document.getElementById("timetableBody");
+				const days = [
+					"Sunday",
+					"Monday",
+					"Tuesday",
+					"Wednesday",
+					"Thursday",
+					"Friday",
+					"Saturday",
+				];
 
-            // Static rows for Sunday (holiday) and Monday (no classes)
-            let html = `<tr><td class="day">Sunday</td><td colspan="3" class="holiday">HOLIDAY</td><td class="break">---</td><td colspan="3" class="holiday">HOLIDAY</td></tr>`;
-            html += `<tr><td class="day">Monday</td><td colspan="3" class="no-classes">NO CLASSES</td><td class="break">---</td><td colspan="3" class="no-classes">NO CLASSES</td></tr>`;
+				// Static rows for Sunday (holiday) and Monday (no classes)
+				let html = `<tr><td class="day">Sunday</td><td colspan="3" class="holiday">HOLIDAY</td><td class="break">---</td><td colspan="3" class="holiday">HOLIDAY</td></tr>`;
+				html += `<tr><td class="day">Monday</td><td colspan="3" class="no-classes">NO CLASSES</td><td class="break">---</td><td colspan="3" class="no-classes">NO CLASSES</td></tr>`;
 
-            // Dynamic rows for Tuesday (2) through Saturday (6)
-            for (let i = 2; i <= 6; i++) {
-                html += `<tr data-day="${i}"><td class="day">${days[i]}</td>`;
-                for (let slot = 0; slot < 7; slot++) {
-                    const alpha = scheduleData.alpha[i][slot];
-                    const beta = scheduleData.beta[i][slot];
+				// Dynamic rows for Tuesday (2) through Saturday (6)
+				for (let i = 2; i <= 6; i++) {
+					html += `<tr data-day="${i}"><td class="day">${days[i]}</td>`;
+					for (let slot = 0; slot < 7; slot++) {
+						const alpha = scheduleData.alpha[i][slot];
+						const beta = scheduleData.beta[i][slot];
 
-                    if (alpha === 'BREAK') { html += `<td class="break">BREAK</td>`; continue; }
+						if (alpha === "BREAK") {
+							html += `<td class="break">BREAK</td>`;
+							continue;
+						}
 
-                    if (currentSection === 'both') {
-                        const alphaIsEmpty = alpha === 'EMPTY' || !alpha;
-                        const betaIsEmpty = beta === 'EMPTY' || !beta;
+						if (currentSection === "both") {
+							const alphaIsEmpty = alpha === "EMPTY" || !alpha;
+							const betaIsEmpty = beta === "EMPTY" || !beta;
 
-                        // Both empty - show ---
-                        if (alphaIsEmpty && betaIsEmpty) {
-                            html += `<td>---</td>`;
-                        }
-                        // Same class in both sections - show merged single cell
-                        else if (isSameClass(alpha, beta)) {
-                            html += `<td data-prof="${alpha.prof}"><span class="subject-tag">${alpha.subject}</span><span class="prof-id">${alpha.prof}</span>${alpha.lab ? `<span class="lab-tag">${alpha.lab}</span>` : ''}</td>`;
-                        }
-                        // Different classes - show split cell with α and β
-                        else {
-                            html += `<td data-section="both">
+							// Both empty - show ---
+							if (alphaIsEmpty && betaIsEmpty) {
+								html += `<td>---</td>`;
+							}
+							// Same class in both sections - show merged single cell
+							else if (isSameClass(alpha, beta)) {
+								html += `<td data-prof="${alpha.prof}"><span class="subject-tag">${alpha.subject}</span><span class="prof-id">${alpha.prof}</span>${alpha.lab ? `<span class="lab-tag">${alpha.lab}</span>` : ""}</td>`;
+							}
+							// Different classes - show split cell with α and β
+							else {
+								html += `<td data-section="both">
                                 <div class="section-label-cell">α</div>
-                                ${alphaIsEmpty ? '<span class="subject-tag empty-class">No Class</span>' : `<span class="subject-tag">${alpha.subject}</span><span class="prof-id">${alpha.prof}</span>${alpha.lab ? `<span class="lab-tag">${alpha.lab}</span>` : ''}`}
+                                ${alphaIsEmpty ? '<span class="subject-tag empty-class">No Class</span>' : `<span class="subject-tag">${alpha.subject}</span><span class="prof-id">${alpha.prof}</span>${alpha.lab ? `<span class="lab-tag">${alpha.lab}</span>` : ""}`}
                                 <hr class="divider">
                                 <div class="section-label-cell">β</div>
-                                ${betaIsEmpty ? '<span class="subject-tag empty-class">No Class</span>' : `<span class="subject-tag">${beta.subject}</span><span class="prof-id">${beta.prof}</span>${beta.lab ? `<span class="lab-tag">${beta.lab}</span>` : ''}`}
+                                ${betaIsEmpty ? '<span class="subject-tag empty-class">No Class</span>' : `<span class="subject-tag">${beta.subject}</span><span class="prof-id">${beta.prof}</span>${beta.lab ? `<span class="lab-tag">${beta.lab}</span>` : ""}`}
                             </td>`;
-                        }
-                    } else {
-                        const data = scheduleData[currentSection][i][slot];
-                        if (data === 'EMPTY' || !data) {
-                            html += `<td>---</td>`;
-                        } else {
-                            html += `<td data-prof="${data.prof}"><span class="subject-tag">${data.subject}</span><span class="prof-id">${data.prof}</span>${data.lab ? `<span class="lab-tag">${data.lab}</span>` : ''}</td>`;
-                        }
-                    }
-                }
-                html += `</tr>`;
-            }
-            tbody.innerHTML = html;
-            highlightCurrentClass();
-        }
+							}
+						} else {
+							const data = scheduleData[currentSection][i][slot];
+							if (data === "EMPTY" || !data) {
+								html += `<td>---</td>`;
+							} else {
+								html += `<td data-prof="${data.prof}"><span class="subject-tag">${data.subject}</span><span class="prof-id">${data.prof}</span>${data.lab ? `<span class="lab-tag">${data.lab}</span>` : ""}</td>`;
+							}
+						}
+					}
+					html += `</tr>`;
+				}
+				tbody.innerHTML = html;
+				highlightCurrentClass();
+			}
 
-        /**
-         * Highlights the current ongoing class based on system time
-         * Compares current time against time slot data attributes
-         */
-        function highlightCurrentClass() {
-            const now = new Date();
-            const curDay = now.getDay();
-            const curTime = now.getHours() * 60 + now.getMinutes();
-            const headers = document.querySelectorAll('thead th');
+			/**
+			 * Highlights the current ongoing class based on system time
+			 * Compares current time against time slot data attributes
+			 */
+			function highlightCurrentClass() {
+				const now = new Date();
+				const curDay = now.getDay();
+				const curTime = now.getHours() * 60 + now.getMinutes();
+				const headers = document.querySelectorAll("thead th");
 
-            // Remove existing highlights
-            document.querySelectorAll('.current-class').forEach(el => el.classList.remove('current-class'));
+				// Remove existing highlights
+				document
+					.querySelectorAll(".current-class")
+					.forEach((el) => el.classList.remove("current-class"));
 
-            // Find and highlight current time slot
-            document.querySelectorAll('tbody tr').forEach(row => {
-                if (parseInt(row.dataset.day) === curDay) {
-                    const cells = row.querySelectorAll('td');
-                    headers.forEach((th, index) => {
-                        if (index === 0 || !th.dataset.start) return;
-                        const [startH, startM] = th.dataset.start.split(':').map(Number);
-                        const [endH, endM] = th.dataset.end.split(':').map(Number);
-                        if (curTime >= startH * 60 + startM && curTime < endH * 60 + endM) {
-                            cells[index].classList.add('current-class');
-                        }
-                    });
-                }
-            });
-        }
+				// Find and highlight current time slot
+				document.querySelectorAll("tbody tr").forEach((row) => {
+					if (parseInt(row.dataset.day) === curDay) {
+						const cells = row.querySelectorAll("td");
+						headers.forEach((th, index) => {
+							if (index === 0 || !th.dataset.start) return;
+							const [startH, startM] = th.dataset.start.split(":").map(Number);
+							const [endH, endM] = th.dataset.end.split(":").map(Number);
+							if (
+								curTime >= startH * 60 + startM &&
+								curTime < endH * 60 + endM
+							) {
+								cells[index].classList.add("current-class");
+							}
+						});
+					}
+				});
+			}
 
-        /**
-         * Toggles faculty filter - highlights classes taught by selected professor
-         * @param {string} profId - Professor's ID (e.g., 'DB', 'AP')
-         * @param {HTMLElement} btn - The clicked filter button
-         */
-        function toggleProf(profId, btn) {
-            const isActive = btn.classList.contains('active');
-            document.querySelectorAll('.prof-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('td').forEach(td => td.classList.remove('dimmed', 'highlight-active'));
+			/**
+			 * Toggles faculty filter - highlights classes taught by selected professor
+			 * @param {string} profId - Professor's ID (e.g., 'DB', 'AP')
+			 * @param {HTMLElement} btn - The clicked filter button
+			 */
+			function toggleProf(profId, btn) {
+				const isActive = btn.classList.contains("active");
+				document
+					.querySelectorAll(".prof-tab")
+					.forEach((t) => t.classList.remove("active"));
+				document
+					.querySelectorAll("td")
+					.forEach((td) => td.classList.remove("dimmed", "highlight-active"));
 
-            if (!isActive) {
-                document.body.classList.add('filter-active');
-                btn.classList.add('active');
-                document.querySelectorAll('td').forEach(td => {
-                    if (td.innerText.includes(profId)) td.classList.add('highlight-active');
-                    else if (td.innerText !== '---' && !td.classList.contains('day') && !td.classList.contains('break') && !td.classList.contains('holiday') && !td.classList.contains('no-classes')) td.classList.add('dimmed');
-                });
-            } else {
-                document.body.classList.remove('filter-active');
-            }
-        }
+				if (!isActive) {
+					document.body.classList.add("filter-active");
+					btn.classList.add("active");
+					document.querySelectorAll("td").forEach((td) => {
+						if (td.innerText.includes(profId))
+							td.classList.add("highlight-active");
+						else if (
+							td.innerText !== "---" &&
+							!td.classList.contains("day") &&
+							!td.classList.contains("break") &&
+							!td.classList.contains("holiday") &&
+							!td.classList.contains("no-classes")
+						)
+							td.classList.add("dimmed");
+					});
+				} else {
+					document.body.classList.remove("filter-active");
+				}
+			}
 
-        // Initialize application
-        loadSectionPreference();
-        setInterval(highlightCurrentClass, 30000); // Update every 30 seconds
-    </script>
-</body>
-
+			// Initialize application
+			loadSectionPreference();
+			setInterval(highlightCurrentClass, 30000); // Update every 30 seconds
+		</script>
+	</body>
 </html>

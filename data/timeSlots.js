@@ -21,13 +21,49 @@
  * @type {TimeSlot[]}
  */
 export const TIME_SLOTS = Object.freeze([
-    { start: "10:40", end: "11:30", displayStart: "10:40 AM", displayEnd: "11:30 AM" },
-    { start: "11:35", end: "12:25", displayStart: "11:35 AM", displayEnd: "12:25 PM" },
-    { start: "12:30", end: "13:20", displayStart: "12:30 PM", displayEnd: "01:20 PM" },
-    { start: "13:20", end: "14:00", displayStart: "01:20 PM", displayEnd: "02:00 PM", isBreak: true },
-    { start: "14:00", end: "14:50", displayStart: "02:00 PM", displayEnd: "02:50 PM" },
-    { start: "14:55", end: "15:45", displayStart: "02:55 PM", displayEnd: "03:45 PM" },
-    { start: "15:50", end: "16:40", displayStart: "03:50 PM", displayEnd: "04:40 PM" }
+	{
+		start: "10:40",
+		end: "11:30",
+		displayStart: "10:40 AM",
+		displayEnd: "11:30 AM",
+	},
+	{
+		start: "11:35",
+		end: "12:25",
+		displayStart: "11:35 AM",
+		displayEnd: "12:25 PM",
+	},
+	{
+		start: "12:30",
+		end: "13:20",
+		displayStart: "12:30 PM",
+		displayEnd: "01:20 PM",
+	},
+	{
+		start: "13:20",
+		end: "14:00",
+		displayStart: "01:20 PM",
+		displayEnd: "02:00 PM",
+		isBreak: true,
+	},
+	{
+		start: "14:00",
+		end: "14:50",
+		displayStart: "02:00 PM",
+		displayEnd: "02:50 PM",
+	},
+	{
+		start: "14:55",
+		end: "15:45",
+		displayStart: "02:55 PM",
+		displayEnd: "03:45 PM",
+	},
+	{
+		start: "15:50",
+		end: "16:40",
+		displayStart: "03:50 PM",
+		displayEnd: "04:40 PM",
+	},
 ]);
 
 /**
@@ -35,7 +71,15 @@ export const TIME_SLOTS = Object.freeze([
  * @readonly
  * @type {string[]}
  */
-export const DAYS = Object.freeze(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
+export const DAYS = Object.freeze([
+	"Sunday",
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thursday",
+	"Friday",
+	"Saturday",
+]);
 
 /**
  * Convert time string "HH:MM" to minutes since midnight
@@ -45,8 +89,8 @@ export const DAYS = Object.freeze(['Sunday', 'Monday', 'Tuesday', 'Wednesday', '
  * parseTimeToMinutes("14:30"); // returns 870
  */
 export function parseTimeToMinutes(timeStr) {
-    const [hours, minutes] = timeStr.split(':').map(Number);
-    return hours * 60 + minutes;
+	const [hours, minutes] = timeStr.split(":").map(Number);
+	return hours * 60 + minutes;
 }
 
 /**
@@ -55,11 +99,11 @@ export function parseTimeToMinutes(timeStr) {
  * @returns {boolean} True if current time is within slot
  */
 export function isCurrentTimeInSlot(slot) {
-    const now = new Date();
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-    const startMinutes = parseTimeToMinutes(slot.start);
-    const endMinutes = parseTimeToMinutes(slot.end);
-    return currentMinutes >= startMinutes && currentMinutes < endMinutes;
+	const now = new Date();
+	const currentMinutes = now.getHours() * 60 + now.getMinutes();
+	const startMinutes = parseTimeToMinutes(slot.start);
+	const endMinutes = parseTimeToMinutes(slot.end);
+	return currentMinutes >= startMinutes && currentMinutes < endMinutes;
 }
 
 /**
@@ -67,5 +111,5 @@ export function isCurrentTimeInSlot(slot) {
  * @returns {number} Day index (0-6)
  */
 export function getCurrentDay() {
-    return new Date().getDay();
+	return new Date().getDay();
 }
