@@ -22,6 +22,12 @@
  */
 export const TIME_SLOTS = Object.freeze([
 	{
+		start: "09:45",
+		end: "10:35",
+		displayStart: "09:45 AM",
+		displayEnd: "10:35 AM",
+	},
+	{
 		start: "10:40",
 		end: "11:30",
 		displayStart: "10:40 AM",
@@ -63,6 +69,12 @@ export const TIME_SLOTS = Object.freeze([
 		end: "16:40",
 		displayStart: "03:50 PM",
 		displayEnd: "04:40 PM",
+	},
+	{
+		start: "16:45",
+		end: "17:35",
+		displayStart: "04:45 PM",
+		displayEnd: "05:35 PM",
 	},
 ]);
 

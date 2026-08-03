@@ -27,8 +27,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta
 			name="description"
-			content="BCA 6th Semester Timetable for Techno College Hooghly - Sections Alpha & Beta" />
-		<title>BCA 6th Sem Timetable | Techno College Hooghly</title>
+			content="BCA 7th Semester Timetable for Techno College Hooghly - Sections Alpha & Beta" />
+		<title>BCA 7th Sem Timetable | Techno College Hooghly</title>
 
 		<!-- Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -93,7 +93,7 @@
 			<!-- Header -->
 			<header>
 				<h2>Techno College Hooghly</h2>
-				<h1>BCA 6th Sem • Room 201</h1>
+				<h1>BCA 7th Sem • Room 302</h1>
 			</header>
 
 			<!-- ======================== Settings Toggle ======================== -->
@@ -164,23 +164,32 @@
 				<div class="settings-row">
 					<span class="settings-label">Filter Faculty</span>
 					<div class="faculty-grid">
-						<button class="prof-tab" onclick="toggleProf('DB', this)">
-							DB
+						<button class="prof-tab" onclick="toggleProf('SL', this)">
+							SL
 						</button>
-						<button class="prof-tab" onclick="toggleProf('SM4', this)">
-							SM4
+						<button class="prof-tab" onclick="toggleProf('SS1', this)">
+							SS1
 						</button>
-						<button class="prof-tab" onclick="toggleProf('AP', this)">
-							AP
+						<button class="prof-tab" onclick="toggleProf('AM2', this)">
+							AM2
 						</button>
 						<button class="prof-tab" onclick="toggleProf('BD', this)">
 							BD
 						</button>
+						<button class="prof-tab" onclick="toggleProf('RN', this)">
+							RN
+						</button>
+						<button class="prof-tab" onclick="toggleProf('AC', this)">
+							AC
+						</button>
 						<button class="prof-tab" onclick="toggleProf('RB', this)">
 							RB
 						</button>
-						<button class="prof-tab" onclick="toggleProf('SB2', this)">
-							SB2
+						<button class="prof-tab" onclick="toggleProf('SS4', this)">
+							SS4
+						</button>
+						<button class="prof-tab" onclick="toggleProf('AD', this)">
+							AD
 						</button>
 					</div>
 				</div>
@@ -196,6 +205,12 @@
 					<thead>
 						<tr>
 							<th>Day</th>
+							<th data-start="09:45" data-end="10:35">
+								<div class="time-block">
+									<span>09:45 AM</span><span class="time-sep">-</span
+									><span>10:35 AM</span>
+								</div>
+							</th>
 							<th data-start="10:40" data-end="11:30">
 								<div class="time-block">
 									<span>10:40 AM</span><span class="time-sep">-</span
@@ -238,13 +253,19 @@
 									><span>04:40 PM</span>
 								</div>
 							</th>
+							<th data-start="16:45" data-end="17:35">
+								<div class="time-block">
+									<span>04:45 PM</span><span class="time-sep">-</span
+									><span>05:35 PM</span>
+								</div>
+							</th>
 						</tr>
 					</thead>
 					<tbody id="timetableBody"></tbody>
 				</table>
 				<!-- Status indicator showing last update date -->
 				<div class="status-pill">
-					ROUTINE AS OF DATE: <strong>2nd March 2026</strong>
+					ROUTINE AS OF DATE: <strong>3rd August 2026</strong>
 				</div>
 			</div>
 		</div>
@@ -264,102 +285,142 @@
 			 */
 			const scheduleData = {
 				alpha: {
-					1: ["EMPTY", "EMPTY", "EMPTY", "BREAK", "EMPTY", "EMPTY", "EMPTY"],
-					2: [
-						{ prof: "SB2", subject: "MIM602A" },
-						{ prof: "SM4", subject: "BCAC691", lab: "L3" },
-						{ prof: "SM4", subject: "BCAC691", lab: "L3" },
+					1: [
+						{ prof: "SL", subject: "Project" },
+						{ prof: "SL", subject: "Project" },
+						{ prof: "SL", subject: "Project" },
+						{ prof: "SL", subject: "Project" },
 						"BREAK",
-						{ prof: "DB", subject: "BCAC601" },
-						{ prof: "DB", subject: "BCAC601" },
+						{ prof: "SL", subject: "Project" },
+						{ prof: "SL", subject: "Project" },
+						{ prof: "SL", subject: "Project" },
+						{ prof: "SL", subject: "Project" }
+					],
+					2: [
 						"EMPTY",
+						{ prof: "SS1", subject: "MIM701A" },
+						{ prof: "AM2", subject: "MIM701A" },
+						{ prof: "AM2", subject: "MIM701A" },
+						"BREAK",
+						{ prof: "BD", subject: "BCAC703" },
+						{ prof: "RN/AC", subject: "BCAC701B/701A" },
+						"EMPTY",
+						"EMPTY"
 					],
 					3: [
-						{ prof: "SB2", subject: "MIM602A" },
-						{ prof: "RB", subject: "MIM601" },
-						{ prof: "DB", subject: "BCAC601" },
-						"BREAK",
-						{ prof: "AP", subject: "BCAC602" },
-						{ prof: "AP", subject: "BCAC602" },
 						"EMPTY",
+						"EMPTY",
+						{ prof: "RB", subject: "MIM701A" },
+						{ prof: "RN/AC", subject: "BCAC701B/701A" },
+						"BREAK",
+						{ prof: "BD", subject: "BCAC703" },
+						{ prof: "SS4", subject: "BCAC702" },
+						"EMPTY",
+						"EMPTY"
 					],
 					4: [
-						{ prof: "SB2", subject: "MIM602A" },
-						{ prof: "RB", subject: "MIM601" },
-						{ prof: "SB2", subject: "SOFT SKILL" },
+						{ prof: "AD", subject: "BCAC792", lab: "L3" },
+						{ prof: "AD", subject: "BCAC792", lab: "L3" },
+						{ prof: "RB", subject: "MIM701A" },
+						{ prof: "BD", subject: "BCAC703" },
 						"BREAK",
-						{ prof: "AP", subject: "BCAC692", lab: "L1" },
-						{ prof: "AP", subject: "BCAC692", lab: "L1" },
+						{ prof: "SS4", subject: "BCAC702" },
+						{ prof: "RN", subject: "BCAC791B", lab: "L2" },
 						"EMPTY",
+						"EMPTY"
 					],
 					5: [
 						"EMPTY",
 						"EMPTY",
-						{ prof: "AP", subject: "BCAC602" },
+						{ prof: "SS1", subject: "MIM701A" },
+						{ prof: "BD", subject: "BCAC703" },
 						"BREAK",
-						{ prof: "RB", subject: "MIM601" },
-						{ prof: "BD", subject: "BCAC603" },
-						{ prof: "BD", subject: "BCAC603" },
+						{ prof: "SS4", subject: "BCAC702" },
+						{ prof: "RN/AC", subject: "BCAC701B/701A" },
+						{ prof: "AC", subject: "BCAC791A", lab: "L2" },
+						{ prof: "AC", subject: "BCAC791A", lab: "L2" }
 					],
 					6: [
-						{ prof: "SB2", subject: "MIM602A" },
-						{ prof: "BD", subject: "BCAC603" },
-						{ prof: "BD", subject: "BCAC603" },
+						"EMPTY",
+						"EMPTY",
+						{ prof: "SS1", subject: "MIM701A" },
+						{ prof: "SS1", subject: "MIM701A" },
 						"BREAK",
-						{ prof: "RB", subject: "MIM601" },
+						{ prof: "SS4", subject: "BCAC702" },
 						"EMPTY",
 						"EMPTY",
-					],
+						"EMPTY"
+					]
 				},
 
 				beta: {
-					1: ["EMPTY", "EMPTY", "EMPTY", "BREAK", "EMPTY", "EMPTY", "EMPTY"],
-					2: [
-						{ prof: "SB2", subject: "MIM602A" },
-						{ prof: "DB", subject: "BCAC601" },
-						{ prof: "DB", subject: "BCAC601" },
+					1: [
+						{ prof: "SL", subject: "Project" },
+						{ prof: "SL", subject: "Project" },
+						{ prof: "SL", subject: "Project" },
+						{ prof: "SL", subject: "Project" },
 						"BREAK",
-						{ prof: "AP", subject: "BCAC692", lab: "L1" },
-						{ prof: "AP", subject: "BCAC692", lab: "L1" },
+						{ prof: "SL", subject: "Project" },
+						{ prof: "SL", subject: "Project" },
+						{ prof: "SL", subject: "Project" },
+						{ prof: "SL", subject: "Project" }
+					],
+					2: [
 						"EMPTY",
+						{ prof: "SS1", subject: "MIM701A" },
+						{ prof: "AM2", subject: "MIM701A" },
+						{ prof: "AM2", subject: "MIM701A" },
+						"BREAK",
+						{ prof: "BD", subject: "BCAC703" },
+						{ prof: "RN/AC", subject: "BCAC701B/701A" },
+						{ prof: "RN", subject: "BCAC791B", lab: "L2" },
+						"EMPTY"
 					],
 					3: [
-						{ prof: "SB2", subject: "MIM602A" },
-						{ prof: "RB", subject: "MIM601" },
-						{ prof: "DB", subject: "BCAC601" },
+						{ prof: "AD", subject: "BCAC792", lab: "L3" },
+						{ prof: "AD", subject: "BCAC792", lab: "L3" },
+						{ prof: "RB", subject: "MIM701A" },
+						{ prof: "RN/AC", subject: "BCAC701B/701A" },
 						"BREAK",
-						{ prof: "AP", subject: "BCAC602" },
-						{ prof: "AP", subject: "BCAC602" },
+						{ prof: "BD", subject: "BCAC703" },
+						{ prof: "SS4", subject: "BCAC702" },
 						"EMPTY",
+						"EMPTY"
 					],
 					4: [
-						{ prof: "SB2", subject: "MIM602A" },
-						{ prof: "RB", subject: "MIM601" },
-						{ prof: "SB2", subject: "SOFT SKILL" },
+						"EMPTY",
+						"EMPTY",
+						{ prof: "RB", subject: "MIM701A" },
+						{ prof: "BD", subject: "BCAC703" },
 						"BREAK",
+						{ prof: "SS4", subject: "BCAC702" },
 						"EMPTY",
 						"EMPTY",
-						"EMPTY",
+						"EMPTY"
 					],
 					5: [
-						{ prof: "SM4", subject: "BCAC691", lab: "L3" },
-						{ prof: "SM4", subject: "BCAC691", lab: "L3" },
-						{ prof: "AP", subject: "BCAC602" },
+						"EMPTY",
+						"EMPTY",
+						{ prof: "SS1", subject: "MIM701A" },
+						{ prof: "BD", subject: "BCAC703" },
 						"BREAK",
-						{ prof: "RB", subject: "MIM601" },
-						{ prof: "BD", subject: "BCAC603" },
-						{ prof: "BD", subject: "BCAC603" },
+						{ prof: "SS4", subject: "BCAC702" },
+						{ prof: "RN/AC", subject: "BCAC701B/701A" },
+						{ prof: "AC", subject: "BCAC791A", lab: "L2" },
+						{ prof: "AC", subject: "BCAC791A", lab: "L2" }
 					],
 					6: [
-						{ prof: "SB2", subject: "MIM602A" },
-						{ prof: "BD", subject: "BCAC603" },
-						{ prof: "BD", subject: "BCAC603" },
+						"EMPTY",
+						"EMPTY",
+						{ prof: "SS1", subject: "MIM701A" },
+						{ prof: "SS1", subject: "MIM701A" },
 						"BREAK",
-						{ prof: "RB", subject: "MIM601" },
+						{ prof: "SS4", subject: "BCAC702" },
 						"EMPTY",
 						"EMPTY",
-					],
-				},
+						"EMPTY"
+					]
+				}
 			};
 
 			/** @type {'both'|'alpha'|'beta'} Currently selected section */
@@ -495,14 +556,13 @@
 					"Saturday",
 				];
 
-				// Static rows for Sunday (holiday) and Monday (no classes)
-				let html = `<tr><td class="day">Sunday</td><td colspan="3" class="holiday">HOLIDAY</td><td class="break">---</td><td colspan="3" class="holiday">HOLIDAY</td></tr>`;
-				html += `<tr><td class="day">Monday</td><td colspan="3" class="no-classes">NO CLASSES</td><td class="break">---</td><td colspan="3" class="no-classes">NO CLASSES</td></tr>`;
+				// Static row for Sunday (holiday)
+				let html = `<tr><td class="day">Sunday</td><td colspan="4" class="holiday">HOLIDAY</td><td class="break">---</td><td colspan="4" class="holiday">HOLIDAY</td></tr>`;
 
-				// Dynamic rows for Tuesday (2) through Saturday (6)
-				for (let i = 2; i <= 6; i++) {
+				// Dynamic rows for Monday (1) through Saturday (6)
+				for (let i = 1; i <= 6; i++) {
 					html += `<tr data-day="${i}"><td class="day">${days[i]}</td>`;
-					for (let slot = 0; slot < 7; slot++) {
+					for (let slot = 0; slot < 9; slot++) {
 						const alpha = scheduleData.alpha[i][slot];
 						const beta = scheduleData.beta[i][slot];
 

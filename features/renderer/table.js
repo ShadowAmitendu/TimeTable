@@ -57,21 +57,9 @@ function isSameClass(alpha, beta) {
 function createSundayRow() {
     const tr = createElement('tr');
     tr.appendChild(createDayCell('Sunday'));
-    tr.appendChild(createHolidayCell(3));
+    tr.appendChild(createHolidayCell(4));
     tr.appendChild(createElement('td', { className: 'break' }, ['---']));
-    tr.appendChild(createHolidayCell(3));
-    return tr;
-}
-
-/**
- * Create a row for Monday (no classes)
- */
-function createMondayRow() {
-    const tr = createElement('tr');
-    tr.appendChild(createDayCell('Monday'));
-    tr.appendChild(createNoClassesCell(3));
-    tr.appendChild(createElement('td', { className: 'break' }, ['---']));
-    tr.appendChild(createNoClassesCell(3));
+    tr.appendChild(createHolidayCell(4));
     return tr;
 }
 
@@ -87,7 +75,7 @@ function createDayRow(dayIndex, currentSection) {
     const alphaSchedule = scheduleData.alpha[dayIndex];
     const betaSchedule = scheduleData.beta[dayIndex];
 
-    for (let slot = 0; slot < 7; slot++) {
+    for (let slot = 0; slot < 9; slot++) {
         const alphaData = alphaSchedule[slot];
         const betaData = betaSchedule[slot];
 
@@ -198,11 +186,8 @@ export function renderSchedule(currentSection) {
     // Add Sunday row
     tbody.appendChild(createSundayRow());
 
-    // Add Monday row
-    tbody.appendChild(createMondayRow());
-
-    // Add Tuesday through Saturday rows
-    for (let i = 2; i <= 6; i++) {
+    // Add Monday through Saturday rows (1 to 6)
+    for (let i = 1; i <= 6; i++) {
         tbody.appendChild(createDayRow(i, currentSection));
     }
 

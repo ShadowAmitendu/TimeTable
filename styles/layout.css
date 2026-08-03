@@ -55,7 +55,7 @@ td.day {
 /* All time-slot columns equal width */
 thead th:not(:first-child),
 tbody td:not(.day) {
-    width: calc((100% - 110px) / 7);
+    width: calc((100% - 110px) / 9);
 }
 
 .time-block {

@@ -18,12 +18,15 @@
  * @type {FacultyMember[]}
  */
 export const FACULTY = Object.freeze([
-	{ id: "DB", name: "DB" },
-	{ id: "SM4", name: "SM4" },
-	{ id: "AP", name: "AP" },
+	{ id: "SL", name: "SL (Salt Lake - Training)" },
+	{ id: "SS1", name: "SS1" },
+	{ id: "AM2", name: "AM2" },
 	{ id: "BD", name: "BD" },
+	{ id: "RN", name: "RN" },
+	{ id: "AC", name: "AC" },
 	{ id: "RB", name: "RB" },
-	{ id: "SB2", name: "SB2" },
+	{ id: "SS4", name: "SS4" },
+	{ id: "AD", name: "AD" },
 ]);
 
 /**

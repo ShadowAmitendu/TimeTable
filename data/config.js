@@ -19,9 +19,9 @@
 export const CONFIG = Object.freeze({
 	college: "Techno College Hooghly",
 	course: "BCA",
-	semester: 6,
-	room: "201",
-	routineDate: "2nd February 2026",
+	semester: 7,
+	room: "302",
+	routineDate: "3rd August 2026",
 });
 
 /**
