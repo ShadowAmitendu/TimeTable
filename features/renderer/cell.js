@@ -76,7 +76,7 @@ export function createSingleSectionCell(data) {
  * Create an empty cell
  */
 export function createEmptyCell() {
-    const td = createElement('td', {}, ['---']);
+    const td = createElement('td', { className: 'cell-empty' }, ['----']);
     return td;
 }
 

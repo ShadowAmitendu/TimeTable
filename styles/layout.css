@@ -68,9 +68,9 @@ table.timetable-grid td {
 /* Header Cells (Day, Sec, Time Slots) */
 table.timetable-grid thead th {
 	background: var(--col-header-bg);
-	color: var(--col-header-text);
+	color: var(--text-main) !important;
 	font-size: 11px;
-	font-weight: 700;
+	font-weight: 800;
 	font-family: 'Inter', sans-serif;
 	padding: 8px 4px;
 }
@@ -88,6 +88,15 @@ table.timetable-grid th.col-slot {
 	width: calc((100% - 145px) / 9);
 }
 
+.single-section th.col-sec,
+.single-section td.cell-sec {
+	display: none !important;
+}
+
+.single-section th.col-slot {
+	width: calc((100% - 85px) / 9) !important;
+}
+
 /* 3 Stacked Lines Time Slot Header */
 .time-slot-label {
 	display: flex;
@@ -98,11 +107,14 @@ table.timetable-grid th.col-slot {
 	line-height: 1.25;
 	font-size: 11px;
 	font-family: 'JetBrains Mono', monospace;
+	color: var(--text-main) !important;
+	font-weight: 700;
 }
 
 .time-slot-label .time-sep {
 	font-size: 10px;
-	color: #8C877D;
+	color: var(--col-header-text);
+	opacity: 0.85;
 }
 
 /* Day & Sec Cells */
@@ -123,10 +135,21 @@ td.cell-sec {
 	letter-spacing: 0.05em;
 }
 
+[data-theme='light'] td.cell-sec {
+	background: #E6DFD5 !important;
+	color: #222222 !important;
+}
+
+[data-theme='light'] table.timetable-grid thead th,
+[data-theme='light'] td.cell-day,
+[data-theme='light'] .time-slot-label {
+	color: #000000 !important;
+}
+
 /* Truly Blank Empty Cells */
 td.cell-empty {
 	background: var(--card-bg);
-	color: transparent;
+	color: var(--cell-break-text);
 }
 
 /* Break & Holiday Cells */
@@ -219,16 +242,20 @@ td.subj-bcac791a {
 td.current-class {
 	box-shadow: inset 0 0 0 2px #ffffff;
 	position: relative;
+	background-image: linear-gradient(rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.15)) !important;
 }
 
 td.current-class::after {
 	content: '• LIVE';
 	position: absolute;
 	top: 2px;
-	right: 4px;
+	right: 3px;
 	color: #ffffff;
+	background: rgba(0, 0, 0, 0.4);
+	padding: 1px 4px;
 	font-size: 9px;
 	font-weight: 900;
+	letter-spacing: 0.03em;
 	animation: pulse 1.5s infinite;
 }
 

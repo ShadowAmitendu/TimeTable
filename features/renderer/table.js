@@ -26,7 +26,7 @@ function isSameItem(a, b) {
 
 function getCellInfo(item) {
 	if (!item || item === 'EMPTY') {
-		return { css: 'cell-empty', html: '', prof: '' };
+		return { css: 'cell-empty', html: '----', prof: '' };
 	}
 	if (item === 'BREAK') {
 		return { css: 'cell-break', html: 'BREAK', prof: '' };
@@ -62,8 +62,10 @@ function getCellInfo(item) {
 }
 
 function countHorizontalSpan(row, startSlot) {
-	let span = 1;
 	const first = row[startSlot];
+	if (!first || typeof first === 'string') return 1;
+	if (first.subject !== 'Project') return 1;
+	let span = 1;
 	for (let i = startSlot + 1; i < 9; i++) {
 		if (isSameItem(first, row[i])) {
 			span++;
@@ -74,38 +76,60 @@ function countHorizontalSpan(row, startSlot) {
 	return span;
 }
 
-function countDiffSpan(row, otherRow, startSlot) {
-	let span = 1;
-	const first = row[startSlot];
-	for (let i = startSlot + 1; i < 9; i++) {
-		if (isSameItem(first, row[i]) && !isSameItem(row[i], otherRow[i])) {
-			span++;
-		} else {
-			break;
-		}
-	}
-	return span;
-}
-
 function countMergedBothSpan(alphaRow, betaRow, startSlot) {
-	let span = 0;
-	for (let i = startSlot; i < 9; i++) {
-		if (
-			isSameItem(alphaRow[i], betaRow[i]) &&
-			isSameItem(alphaRow[startSlot], alphaRow[i])
-		) {
-			span++;
-		} else {
-			break;
+	const firstAlpha = alphaRow[startSlot];
+	if (!firstAlpha || firstAlpha === 'EMPTY') return 0;
+	const firstBeta = betaRow[startSlot];
+	if (!firstBeta || firstBeta === 'EMPTY') return 0;
+	if (!isSameItem(firstAlpha, firstBeta)) return 0;
+
+	if (typeof firstAlpha === 'object' && firstAlpha.subject === 'Project') {
+		let span = 0;
+		for (let i = startSlot; i < 9; i++) {
+			if (
+				isSameItem(alphaRow[i], betaRow[i]) &&
+				isSameItem(alphaRow[startSlot], alphaRow[i])
+			) {
+				span++;
+			} else {
+				break;
+			}
 		}
+		return span;
 	}
-	return span;
+
+	return 1;
 }
 
-function buildSundayRows() {
+export function updateBannerTitle(currentSection) {
+	const headerEl = document.querySelector('header.banner-header h1');
+	const tableWrapper = document.querySelector('.table-wrapper');
+	const secTh = document.querySelector('th.col-sec');
+
+	const sec = (currentSection || '').toLowerCase();
+
+	if (sec === 'alpha') {
+		if (headerEl) headerEl.textContent = 'BCA 7th Semester - Alpha | Room 302';
+		if (tableWrapper) tableWrapper.classList.add('single-section');
+		if (secTh) secTh.style.display = 'none';
+	} else if (sec === 'beta') {
+		if (headerEl) headerEl.textContent = 'BCA 7th Semester - Beta | Room 302';
+		if (tableWrapper) tableWrapper.classList.add('single-section');
+		if (secTh) secTh.style.display = 'none';
+	} else {
+		if (headerEl) headerEl.textContent = 'BCA 7th Semester - Alpha & Beta | Room 302';
+		if (tableWrapper) tableWrapper.classList.remove('single-section');
+		if (secTh) secTh.style.display = '';
+	}
+}
+
+function buildSundayRows(currentSection) {
+	const sec = (currentSection || '').toLowerCase();
+	const isSingle = sec === 'alpha' || sec === 'beta';
+	const secCell = isSingle ? '' : `<td class="cell-sec">BOTH</td>`;
 	return `<tr>
         <td class="cell-day">Sunday</td>
-        <td class="cell-sec">BOTH</td>
+        ${secCell}
         <td colspan="9" class="cell-empty cell-holiday">HOLIDAY</td>
     </tr>`;
 }
@@ -117,49 +141,26 @@ function buildDayRows(dayIndex, currentSection) {
 	const betaRow = scheduleData.beta[dayIndex] || [];
 	const dayName = DAYS[dayIndex];
 
-	// Single section views (alpha or beta)
-	if (currentSection === SECTION.ALPHA || currentSection === SECTION.BETA) {
-		const row =
-			currentSection === SECTION.ALPHA ? alphaRow : betaRow;
-		const secName = currentSection === SECTION.ALPHA ? 'ALPHA' : 'BETA';
-		let html = `<tr data-day="${dayIndex}"><td class="cell-day">${dayName}</td><td class="cell-sec">${secName}</td>`;
+	const sec = (currentSection || '').toLowerCase();
 
+	// Single section views (alpha or beta)
+	if (sec === 'alpha' || sec === 'beta') {
+		const row = sec === 'alpha' ? alphaRow : betaRow;
+		let html = `<tr data-day="${dayIndex}"><td class="cell-day">${dayName}</td>`;
 		let slot = 0;
 		while (slot < 9) {
 			const span = countHorizontalSpan(row, slot);
 			const info = getCellInfo(row[slot]);
 			const attrProf = info.prof ? ` data-prof="${info.prof}"` : '';
-			html += `<td colspan="${span}" class="${info.css}"${attrProf}>${info.html}</td>`;
+			const colspanAttr = span > 1 ? ` colspan="${span}"` : '';
+			html += `<td${colspanAttr} class="${info.css}"${attrProf}>${info.html}</td>`;
 			slot += span;
 		}
 		html += `</tr>`;
 		return html;
 	}
 
-	// SECTION.BOTH view
-	let isIdenticalAll = true;
-	for (let i = 0; i < 9; i++) {
-		if (!isSameItem(alphaRow[i], betaRow[i])) {
-			isIdenticalAll = false;
-			break;
-		}
-	}
-
-	if (isIdenticalAll) {
-		let html = `<tr data-day="${dayIndex}"><td class="cell-day">${dayName}</td><td class="cell-sec">BOTH</td>`;
-		let slot = 0;
-		while (slot < 9) {
-			const span = countHorizontalSpan(alphaRow, slot);
-			const info = getCellInfo(alphaRow[slot]);
-			const attrProf = info.prof ? ` data-prof="${info.prof}"` : '';
-			html += `<td colspan="${span}" class="${info.css}"${attrProf}>${info.html}</td>`;
-			slot += span;
-		}
-		html += `</tr>`;
-		return html;
-	}
-
-	// Split day view (Alpha & Beta differ)
+	// SECTION.BOTH view: Always render separate ALPHA & BETA rows per day
 	let tr1 = `<tr data-day="${dayIndex}"><td rowspan="2" class="cell-day">${dayName}</td><td class="cell-sec">ALPHA</td>`;
 	let tr2 = `<tr data-day="${dayIndex}"><td class="cell-sec">BETA</td>`;
 
@@ -168,34 +169,22 @@ function buildDayRows(dayIndex, currentSection) {
 		const bothSpan = countMergedBothSpan(alphaRow, betaRow, slot);
 
 		if (bothSpan > 0) {
-			// Identical cell for both sections - merge vertically (rowspan=2)
 			const info = getCellInfo(alphaRow[slot]);
 			const attrProf = info.prof ? ` data-prof="${info.prof}"` : '';
 			const colspanAttr = bothSpan > 1 ? ` colspan="${bothSpan}"` : '';
 			tr1 += `<td${colspanAttr} rowspan="2" class="${info.css}"${attrProf}>${info.html}</td>`;
 			slot += bothSpan;
 		} else {
-			// Differing cells
-			const alphaSpan = countDiffSpan(alphaRow, betaRow, slot);
-			const betaSpan = countDiffSpan(betaRow, alphaRow, slot);
-
 			const alphaInfo = getCellInfo(alphaRow[slot]);
 			const betaInfo = getCellInfo(betaRow[slot]);
 
-			const alphaAttrProf = alphaInfo.prof
-				? ` data-prof="${alphaInfo.prof}"`
-				: '';
-			const betaAttrProf = betaInfo.prof
-				? ` data-prof="${betaInfo.prof}"`
-				: '';
+			const alphaProf = alphaInfo.prof ? ` data-prof="${alphaInfo.prof}"` : '';
+			const betaProf = betaInfo.prof ? ` data-prof="${betaInfo.prof}"` : '';
 
-			const alphaColspan = alphaSpan > 1 ? ` colspan="${alphaSpan}"` : '';
-			const betaColspan = betaSpan > 1 ? ` colspan="${betaSpan}"` : '';
+			tr1 += `<td class="${alphaInfo.css}"${alphaProf}>${alphaInfo.html}</td>`;
+			tr2 += `<td class="${betaInfo.css}"${betaProf}>${betaInfo.html}</td>`;
 
-			tr1 += `<td${alphaColspan} class="${alphaInfo.css}"${alphaAttrProf}>${alphaInfo.html}</td>`;
-			tr2 += `<td${betaColspan} class="${betaInfo.css}"${betaAttrProf}>${betaInfo.html}</td>`;
-
-			slot += Math.max(alphaSpan, betaSpan);
+			slot += 1;
 		}
 	}
 
@@ -226,11 +215,15 @@ export function renderSchedule(currentSection) {
 	const tbody = $('timetableBody') || document.getElementById('timetableBody');
 	if (!tbody) return;
 
-	let html = buildSundayRows();
+	updateBannerTitle(currentSection);
+
+	let html = '';
 
 	for (let i = 1; i <= 6; i++) {
 		html += buildDayRows(i, currentSection);
 	}
+
+	html += buildSundayRows(currentSection);
 
 	tbody.innerHTML = html;
 	highlightCurrentClass();

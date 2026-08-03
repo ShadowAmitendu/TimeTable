@@ -10,11 +10,16 @@
 		color: #1F1E1C !important;
 		-webkit-print-color-adjust: exact;
 		print-color-adjust: exact;
-		margin: 0;
-		padding: 0;
+		margin: 0 !important;
+		padding: 0 !important;
 		font-family: 'Inter', system-ui, -apple-system, sans-serif;
 		font-size: 9pt;
 		line-height: 1.2;
+		display: flex !important;
+		flex-direction: column !important;
+		justify-content: center !important;
+		align-items: center !important;
+		min-height: 100vh !important;
 	}
 
 	* {
@@ -25,6 +30,10 @@
 
 	/* Hide UI controls */
 	.print-btn,
+	.top-controls,
+	.top-print-btn,
+	.controls-toggle,
+	.theme-toggle-btn,
 	.section-modal,
 	.controls-wrapper,
 	.settings-content,
@@ -33,8 +42,9 @@
 	}
 
 	#contentArea {
+		width: 100% !important;
 		max-width: 100% !important;
-		margin: 0 auto !important;
+		margin: auto !important;
 	}
 
 	/* Header Banner in Print */
@@ -55,8 +65,10 @@
 
 	/* Table Layout */
 	.table-wrapper {
-		width: 100%;
-		border: 1px solid #3D3B36 !important;
+		width: 100% !important;
+		max-width: 100% !important;
+		margin: 0 auto !important;
+		border: 3px solid #000000 !important;
 		background: #FDFCF9 !important;
 	}
 
@@ -68,13 +80,15 @@
 
 	table.timetable-grid th,
 	table.timetable-grid td {
-		border: 1px solid #CCCCCC !important;
+		border: 2px solid #000000 !important;
 		padding: 4px 2px;
 		vertical-align: middle;
 		text-align: center;
 	}
 
-	table.timetable-grid thead th {
+	table.timetable-grid thead th,
+	.time-slot-label,
+	.time-slot-label .time-sep {
 		background-color: #F1EAD9 !important;
 		color: #1F1E1C !important;
 		font-size: 8pt;
@@ -94,6 +108,18 @@
 
 	td.cell-empty {
 		background-color: #FDFCF9 !important;
+		color: #7F8C8D !important;
+	}
+
+	/* Disable ongoing highlight and badge in print */
+	td.current-class {
+		box-shadow: none !important;
+		background-image: none !important;
+	}
+
+	td.current-class::after {
+		display: none !important;
+		content: none !important;
 	}
 
 	/* Light Tinted Subject Colors for Print */
@@ -143,8 +169,8 @@
 	}
 
 	td.subj-bcac791a {
-		background-color: #EAEDED !important;
-		color: #424949 !important;
+		background-color: #E6F0FF !important;
+		color: #0052CC !important;
 	}
 
 	td.cell-break {

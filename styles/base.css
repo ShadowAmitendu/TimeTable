@@ -40,8 +40,8 @@
 	--subj-bcac702-ss4-bg: #1F3621;
 	--subj-bcac702-ss4-text: #50C878;
 
-	--subj-bcac791a-ac-l2-bg: #2F2E2B;
-	--subj-bcac791a-ac-l2-text: #ABB2BF;
+	--subj-bcac791a-ac-l2-bg: #1B2B45;
+	--subj-bcac791a-ac-l2-text: #4C9AFF;
 
 	--cell-break-bg: #252421;
 	--cell-break-text: #8C877D;
@@ -54,9 +54,9 @@
 	--header-bg: #CC785C;
 	--header-text: #FFFFFF;
 	--col-header-bg: #EFECE6;
-	--col-header-text: #4A4741;
-	--border-color: #E0DACD;
-	--text-main: #1F1E1C;
+	--col-header-text: #000000;
+	--border-color: #D3CDC0;
+	--text-main: #000000;
 
 	/* Subject Color Palette (Light Tints) */
 	--subj-project-bg: #FBEBE6;
@@ -86,8 +86,8 @@
 	--subj-bcac702-ss4-bg: #E8F8F5;
 	--subj-bcac702-ss4-text: #117A65;
 
-	--subj-bcac791a-ac-l2-bg: #EAEDED;
-	--subj-bcac791a-ac-l2-text: #424949;
+	--subj-bcac791a-ac-l2-bg: #E6F0FF;
+	--subj-bcac791a-ac-l2-text: #0052CC;
 
 	--cell-break-bg: #F2F3F4;
 	--cell-break-text: #7F8C8D;
