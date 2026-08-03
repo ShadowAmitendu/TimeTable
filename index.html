@@ -47,7 +47,7 @@
 	<body>
 		<!-- ======================== Section Selection Modal ======================== -->
 		<!-- Displays on page load to let user choose which section(s) to view -->
-		<div class="section-modal" id="sectionModal">
+		<div class="section-modal" id="sectionModal" style="display: none;">
 			<div class="modal-content">
 				<div class="modal-title">Welcome!</div>
 				<div class="modal-subtitle">
@@ -64,6 +64,51 @@
 						Section β (Beta)
 					</button>
 				</div>
+			</div>
+		</div>
+
+		<!-- ======================== Options Modal Popup ======================== -->
+		<div class="section-modal" id="optionsModal" style="display: none;">
+			<div class="modal-content options-modal-content">
+				<div class="modal-header-row">
+					<div class="modal-title">Timetable Options</div>
+					<button class="close-modal-btn" onclick="toggleSettings()" aria-label="Close options">✕</button>
+				</div>
+				<!-- Section Selector -->
+				<div class="settings-row">
+					<span class="settings-label">Switch Section</span>
+					<div class="custom-select-container">
+						<div class="select-styled" onclick="toggleDropdown()">
+							<span id="selectedVal">Both (α & β)</span>
+							<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+								<polyline points="6 9 12 15 18 9"></polyline>
+							</svg>
+						</div>
+						<div class="select-options" id="selectOptions">
+							<div class="option" onclick="updateSelection('both', 'Both (α & β)')">Both (α & β)</div>
+							<div class="option" onclick="updateSelection('alpha', 'Section α (Alpha)')">Section α (Alpha)</div>
+							<div class="option" onclick="updateSelection('beta', 'Section β (Beta)')">Section β (Beta)</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Faculty Filter -->
+				<div class="settings-row">
+					<span class="settings-label">Filter Faculty</span>
+					<div class="faculty-grid">
+						<button class="prof-tab" onclick="toggleProf('SL', this)">SL</button>
+						<button class="prof-tab" onclick="toggleProf('SS1', this)">SS1</button>
+						<button class="prof-tab" onclick="toggleProf('AM2', this)">AM2</button>
+						<button class="prof-tab" onclick="toggleProf('BD', this)">BD</button>
+						<button class="prof-tab" onclick="toggleProf('RN', this)">RN</button>
+						<button class="prof-tab" onclick="toggleProf('AC', this)">AC</button>
+						<button class="prof-tab" onclick="toggleProf('RB', this)">RB</button>
+						<button class="prof-tab" onclick="toggleProf('SS4', this)">SS4</button>
+						<button class="prof-tab" onclick="toggleProf('AD', this)">AD</button>
+					</div>
+				</div>
+
+				<button class="modal-btn done-btn" onclick="toggleSettings()">Done</button>
 			</div>
 		</div>
 
@@ -89,22 +134,37 @@
 		</button>
 
 		<!-- ======================== Main Content Area ======================== -->
-		<div id="contentArea" class="settings-hidden">
-			<!-- Header -->
-			<header>
-				<h2>Techno College Hooghly</h2>
-				<h1>BCA 7th Sem • Room 302</h1>
-			</header>
-
-			<!-- ======================== Settings Toggle ======================== -->
-			<div class="controls-wrapper">
+		<div id="contentArea">
+			<!-- ======================== Top Controls ======================== -->
+			<div class="top-controls">
+				<button
+					class="top-print-btn"
+					onclick="window.print()"
+					aria-label="Print timetable">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="14"
+						height="14"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2.5"
+						stroke-linecap="round"
+						stroke-linejoin="round">
+						<polyline points="6 9 6 2 18 2 18 9"></polyline>
+						<path
+							d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+						<rect x="6" y="14" width="12" height="8"></rect>
+					</svg>
+					Print
+				</button>
 				<button
 					class="controls-toggle"
 					onclick="toggleSettings()"
-					aria-label="Toggle settings panel">
+					aria-label="Toggle options panel">
 					<svg
-						width="16"
-						height="16"
+						width="14"
+						height="14"
 						viewBox="0 0 24 24"
 						fill="none"
 						stroke="currentColor"
@@ -117,146 +177,70 @@
 					</svg>
 					<span id="toggleText">Options</span>
 				</button>
+				<button
+					class="theme-toggle-btn"
+					onclick="toggleTheme()"
+					aria-label="Toggle dark/light theme">
+					<svg id="sunIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+					<svg id="moonIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+					<span id="themeText">Theme</span>
+				</button>
 			</div>
 
-			<!-- ======================== Settings Panel ======================== -->
-			<!-- Contains section switcher and faculty filter controls -->
-			<div class="settings-content" id="settingsPanel">
-				<!-- Section Selector -->
-				<div class="settings-row">
-					<span class="settings-label">Switch Section</span>
-					<div class="custom-select-container">
-						<div class="select-styled" onclick="toggleDropdown()">
-							<span id="selectedVal">Both (α & β)</span>
-							<svg
-								width="12"
-								height="12"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="3"
-								stroke-linecap="round"
-								stroke-linejoin="round">
-								<polyline points="6 9 12 15 18 9"></polyline>
-							</svg>
-						</div>
-						<div class="select-options" id="selectOptions">
-							<div
-								class="option"
-								onclick="updateSelection('both', 'Both (α & β)')">
-								Both (α & β)
-							</div>
-							<div
-								class="option"
-								onclick="updateSelection('alpha', 'Section α (Alpha)')">
-								Section α (Alpha)
-							</div>
-							<div
-								class="option"
-								onclick="updateSelection('beta', 'Section β (Beta)')">
-								Section β (Beta)
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Faculty Filter -->
-				<div class="settings-row">
-					<span class="settings-label">Filter Faculty</span>
-					<div class="faculty-grid">
-						<button class="prof-tab" onclick="toggleProf('SL', this)">
-							SL
-						</button>
-						<button class="prof-tab" onclick="toggleProf('SS1', this)">
-							SS1
-						</button>
-						<button class="prof-tab" onclick="toggleProf('AM2', this)">
-							AM2
-						</button>
-						<button class="prof-tab" onclick="toggleProf('BD', this)">
-							BD
-						</button>
-						<button class="prof-tab" onclick="toggleProf('RN', this)">
-							RN
-						</button>
-						<button class="prof-tab" onclick="toggleProf('AC', this)">
-							AC
-						</button>
-						<button class="prof-tab" onclick="toggleProf('RB', this)">
-							RB
-						</button>
-						<button class="prof-tab" onclick="toggleProf('SS4', this)">
-							SS4
-						</button>
-						<button class="prof-tab" onclick="toggleProf('AD', this)">
-							AD
-						</button>
-					</div>
-				</div>
-			</div>
-
-			<!-- ======================== Timetable ======================== -->
-			<!--
-            Time slots with data-start/data-end attributes for current class highlighting.
-            Table body is dynamically populated by JavaScript.
-        -->
+			<!-- ======================== Timetable Container ======================== -->
 			<div class="table-wrapper">
-				<table>
+				<!-- Header Banner -->
+				<header class="banner-header">
+					<h1>BCA 7th Semester — Alpha & Beta (Room 302)</h1>
+				</header>
+				<table class="timetable-grid">
 					<thead>
 						<tr>
-							<th>Day</th>
-							<th data-start="09:45" data-end="10:35">
-								<div class="time-block">
-									<span>09:45 AM</span><span class="time-sep">-</span
-									><span>10:35 AM</span>
+							<th class="col-day">Day</th>
+							<th class="col-sec">Sec</th>
+							<th class="col-slot" data-start="09:45" data-end="10:35">
+								<div class="time-slot-label">
+									<span>09:45 AM</span><span class="time-sep">–</span><span>10:35 AM</span>
 								</div>
 							</th>
-							<th data-start="10:40" data-end="11:30">
-								<div class="time-block">
-									<span>10:40 AM</span><span class="time-sep">-</span
-									><span>11:30 AM</span>
+							<th class="col-slot" data-start="10:40" data-end="11:30">
+								<div class="time-slot-label">
+									<span>10:40 AM</span><span class="time-sep">–</span><span>11:30 AM</span>
 								</div>
 							</th>
-							<th data-start="11:35" data-end="12:25">
-								<div class="time-block">
-									<span>11:35 AM</span><span class="time-sep">-</span
-									><span>12:25 PM</span>
+							<th class="col-slot" data-start="11:35" data-end="12:25">
+								<div class="time-slot-label">
+									<span>11:35 AM</span><span class="time-sep">–</span><span>12:25 PM</span>
 								</div>
 							</th>
-							<th data-start="12:30" data-end="13:20">
-								<div class="time-block">
-									<span>12:30 PM</span><span class="time-sep">-</span
-									><span>01:20 PM</span>
+							<th class="col-slot" data-start="12:30" data-end="13:20">
+								<div class="time-slot-label">
+									<span>12:30 PM</span><span class="time-sep">–</span><span>01:20 PM</span>
 								</div>
 							</th>
-							<th data-start="13:20" data-end="14:00">
-								<div class="time-block">
-									<span>01:20 PM</span><span class="time-sep">-</span
-									><span>02:00 PM</span>
+							<th class="col-slot" data-start="13:20" data-end="14:00">
+								<div class="time-slot-label">
+									<span>01:20 PM</span><span class="time-sep">–</span><span>02:00 PM</span>
 								</div>
 							</th>
-							<th data-start="14:00" data-end="14:50">
-								<div class="time-block">
-									<span>02:00 PM</span><span class="time-sep">-</span
-									><span>02:50 PM</span>
+							<th class="col-slot" data-start="14:00" data-end="14:50">
+								<div class="time-slot-label">
+									<span>02:00 PM</span><span class="time-sep">–</span><span>02:50 PM</span>
 								</div>
 							</th>
-							<th data-start="14:55" data-end="15:45">
-								<div class="time-block">
-									<span>02:55 PM</span><span class="time-sep">-</span
-									><span>03:45 PM</span>
+							<th class="col-slot" data-start="14:55" data-end="15:45">
+								<div class="time-slot-label">
+									<span>02:55 PM</span><span class="time-sep">–</span><span>03:45 PM</span>
 								</div>
 							</th>
-							<th data-start="15:50" data-end="16:40">
-								<div class="time-block">
-									<span>03:50 PM</span><span class="time-sep">-</span
-									><span>04:40 PM</span>
+							<th class="col-slot" data-start="15:50" data-end="16:40">
+								<div class="time-slot-label">
+									<span>03:50 PM</span><span class="time-sep">–</span><span>04:40 PM</span>
 								</div>
 							</th>
-							<th data-start="16:45" data-end="17:35">
-								<div class="time-block">
-									<span>04:45 PM</span><span class="time-sep">-</span
-									><span>05:35 PM</span>
+							<th class="col-slot" data-start="16:45" data-end="17:35">
+								<div class="time-slot-label">
+									<span>04:45 PM</span><span class="time-sep">–</span><span>05:35 PM</span>
 								</div>
 							</th>
 						</tr>
@@ -456,19 +440,13 @@
 			function loadSectionPreference() {
 				const savedSection = getCookie("selectedSection");
 				if (savedSection) {
-					// Cookie still valid - skip modal
-					document.getElementById("sectionModal").style.display = "none";
-					document
-						.getElementById("contentArea")
-						.classList.remove("settings-hidden");
 					currentSection = savedSection;
 					document.getElementById("selectedVal").textContent =
 						getSectionText(savedSection);
-					renderSchedule();
 				} else {
-					// Cookie expired - show modal
-					document.getElementById("sectionModal").style.display = "flex";
+					currentSection = "both";
 				}
+				renderSchedule();
 			}
 
 			/**
@@ -492,9 +470,6 @@
 			function selectFromModal(section) {
 				setCookie("selectedSection", section, COOKIE_EXPIRY_MINUTES);
 				document.getElementById("sectionModal").style.display = "none";
-				document
-					.getElementById("contentArea")
-					.classList.remove("settings-hidden");
 				currentSection = section;
 				updateSelection(section, getSectionText(section));
 				renderSchedule();
@@ -534,18 +509,104 @@
 			 * @param {Object|string} b - Second class data
 			 * @returns {boolean} True if same class
 			 */
-			function isSameClass(a, b) {
-				if (typeof a === "string" || typeof b === "string") return false;
+			function isSameItem(a, b) {
+				if (a === b) return true;
 				if (!a || !b) return false;
-				return a.subject === b.subject && a.prof === b.prof;
+				if (typeof a === "string" || typeof b === "string") return false;
+				return a.subject === b.subject && a.prof === b.prof && a.lab === b.lab;
 			}
 
-			/**
-			 * Renders the timetable based on current section selection
-			 * Generates HTML rows for each day with appropriate cells
-			 */
-			function renderSchedule() {
-				const tbody = document.getElementById("timetableBody");
+			function getCellInfo(item) {
+				if (!item || item === "EMPTY") {
+					return { css: "cell-empty", html: "", prof: "" };
+				}
+				if (item === "BREAK") {
+					return { css: "cell-break", html: "BREAK", prof: "" };
+				}
+				const s = item.subject || "";
+				const p = item.prof || "";
+				const l = item.lab || "";
+
+				let css = "subj-default";
+				if (s === "Project") css = "subj-project";
+				else if (s === "MIM701A" && p === "SS1") css = "subj-mim701a-ss1";
+				else if (s === "MIM701A" && p === "AM2") css = "subj-mim701a-am2";
+				else if (s === "MIM701A" && p === "RB") css = "subj-mim701a-rb";
+				else if (s === "BCAC703") css = "subj-bcac703";
+				else if (s.includes("BCAC701B") || s.includes("701A"))
+					css = "subj-bcac701b-701a";
+				else if (s === "BCAC791B") css = "subj-bcac791b";
+				else if (s === "BCAC792") css = "subj-bcac792";
+				else if (s === "BCAC702") css = "subj-bcac702";
+				else if (s === "BCAC791A") css = "subj-bcac791a";
+
+				let html = "";
+				if (s === "BCAC701B/701A") {
+					html = "BCAC701B RN<br/>/ 701A AC";
+				} else if (s === "Project") {
+					html = "Classes at Salt Lake<br/>(Industrial Training)";
+				} else {
+					html = `${s} ${p}`;
+					if (l) html += `<br/>${l}`;
+				}
+
+				return { css, html, prof: p };
+			}
+
+			function countHorizontalSpan(row, startSlot) {
+				let span = 1;
+				const first = row[startSlot];
+				for (let i = startSlot + 1; i < 9; i++) {
+					if (isSameItem(first, row[i])) {
+						span++;
+					} else {
+						break;
+					}
+				}
+				return span;
+			}
+
+			function countDiffSpan(row, otherRow, startSlot) {
+				let span = 1;
+				const first = row[startSlot];
+				for (let i = startSlot + 1; i < 9; i++) {
+					if (isSameItem(first, row[i]) && !isSameItem(row[i], otherRow[i])) {
+						span++;
+					} else {
+						break;
+					}
+				}
+				return span;
+			}
+
+			function countMergedBothSpan(alphaRow, betaRow, startSlot) {
+				let span = 0;
+				for (let i = startSlot; i < 9; i++) {
+					if (
+						isSameItem(alphaRow[i], betaRow[i]) &&
+						isSameItem(alphaRow[startSlot], alphaRow[i])
+					) {
+						span++;
+					} else {
+						break;
+					}
+				}
+				return span;
+			}
+
+			function buildSundayRows() {
+				return `<tr>
+					<td class="cell-day">Sunday</td>
+					<td class="cell-sec">BOTH</td>
+					<td colspan="4" class="cell-empty">HOLIDAY</td>
+					<td class="cell-break">BREAK</td>
+					<td colspan="4" class="cell-empty">HOLIDAY</td>
+				</tr>`;
+			}
+
+			function buildDayRows(dayIndex) {
+				const alphaRow = scheduleData.alpha[dayIndex] || [];
+				const betaRow = scheduleData.beta[dayIndex] || [];
 				const days = [
 					"Sunday",
 					"Monday",
@@ -555,57 +616,117 @@
 					"Friday",
 					"Saturday",
 				];
+				const dayName = days[dayIndex];
 
-				// Static row for Sunday (holiday)
-				let html = `<tr><td class="day">Sunday</td><td colspan="4" class="holiday">HOLIDAY</td><td class="break">---</td><td colspan="4" class="holiday">HOLIDAY</td></tr>`;
+				if (currentSection === "alpha" || currentSection === "beta") {
+					const row = currentSection === "alpha" ? alphaRow : betaRow;
+					const secName = currentSection === "alpha" ? "ALPHA" : "BETA";
+					let html = `<tr data-day="${dayIndex}"><td class="cell-day">${dayName}</td><td class="cell-sec">${secName}</td>`;
 
-				// Dynamic rows for Monday (1) through Saturday (6)
-				for (let i = 1; i <= 6; i++) {
-					html += `<tr data-day="${i}"><td class="day">${days[i]}</td>`;
-					for (let slot = 0; slot < 9; slot++) {
-						const alpha = scheduleData.alpha[i][slot];
-						const beta = scheduleData.beta[i][slot];
-
-						if (alpha === "BREAK") {
-							html += `<td class="break">BREAK</td>`;
-							continue;
-						}
-
-						if (currentSection === "both") {
-							const alphaIsEmpty = alpha === "EMPTY" || !alpha;
-							const betaIsEmpty = beta === "EMPTY" || !beta;
-
-							// Both empty - show ---
-							if (alphaIsEmpty && betaIsEmpty) {
-								html += `<td>---</td>`;
-							}
-							// Same class in both sections - show merged single cell
-							else if (isSameClass(alpha, beta)) {
-								html += `<td data-prof="${alpha.prof}"><span class="subject-tag">${alpha.subject}</span><span class="prof-id">${alpha.prof}</span>${alpha.lab ? `<span class="lab-tag">${alpha.lab}</span>` : ""}</td>`;
-							}
-							// Different classes - show split cell with α and β
-							else {
-								html += `<td data-section="both">
-                                <div class="section-label-cell">α</div>
-                                ${alphaIsEmpty ? '<span class="subject-tag empty-class">No Class</span>' : `<span class="subject-tag">${alpha.subject}</span><span class="prof-id">${alpha.prof}</span>${alpha.lab ? `<span class="lab-tag">${alpha.lab}</span>` : ""}`}
-                                <hr class="divider">
-                                <div class="section-label-cell">β</div>
-                                ${betaIsEmpty ? '<span class="subject-tag empty-class">No Class</span>' : `<span class="subject-tag">${beta.subject}</span><span class="prof-id">${beta.prof}</span>${beta.lab ? `<span class="lab-tag">${beta.lab}</span>` : ""}`}
-                            </td>`;
-							}
-						} else {
-							const data = scheduleData[currentSection][i][slot];
-							if (data === "EMPTY" || !data) {
-								html += `<td>---</td>`;
-							} else {
-								html += `<td data-prof="${data.prof}"><span class="subject-tag">${data.subject}</span><span class="prof-id">${data.prof}</span>${data.lab ? `<span class="lab-tag">${data.lab}</span>` : ""}</td>`;
-							}
-						}
+					let slot = 0;
+					while (slot < 9) {
+						const span = countHorizontalSpan(row, slot);
+						const info = getCellInfo(row[slot]);
+						const attrProf = info.prof ? ` data-prof="${info.prof}"` : "";
+						html += `<td colspan="${span}" class="${info.css}"${attrProf}>${info.html}</td>`;
+						slot += span;
 					}
 					html += `</tr>`;
+					return html;
+				}
+
+				let isIdenticalAll = true;
+				for (let i = 0; i < 9; i++) {
+					if (!isSameItem(alphaRow[i], betaRow[i])) {
+						isIdenticalAll = false;
+						break;
+					}
+				}
+
+				if (isIdenticalAll) {
+					let html = `<tr data-day="${dayIndex}"><td class="cell-day">${dayName}</td><td class="cell-sec">BOTH</td>`;
+					let slot = 0;
+					while (slot < 9) {
+						const span = countHorizontalSpan(alphaRow, slot);
+						const info = getCellInfo(alphaRow[slot]);
+						const attrProf = info.prof ? ` data-prof="${info.prof}"` : "";
+						html += `<td colspan="${span}" class="${info.css}"${attrProf}>${info.html}</td>`;
+						slot += span;
+					}
+					html += `</tr>`;
+					return html;
+				}
+
+				let tr1 = `<tr data-day="${dayIndex}"><td rowspan="2" class="cell-day">${dayName}</td><td class="cell-sec">ALPHA</td>`;
+				let tr2 = `<tr data-day="${dayIndex}"><td class="cell-sec">BETA</td>`;
+
+				let slot = 0;
+				while (slot < 9) {
+					const bothSpan = countMergedBothSpan(alphaRow, betaRow, slot);
+
+					if (bothSpan > 0) {
+						const info = getCellInfo(alphaRow[slot]);
+						const attrProf = info.prof ? ` data-prof="${info.prof}"` : "";
+						const colspanAttr = bothSpan > 1 ? ` colspan="${bothSpan}"` : "";
+						tr1 += `<td${colspanAttr} rowspan="2" class="${info.css}"${attrProf}>${info.html}</td>`;
+						slot += bothSpan;
+					} else {
+						const alphaSpan = countDiffSpan(alphaRow, betaRow, slot);
+						const betaSpan = countDiffSpan(betaRow, alphaRow, slot);
+
+						const alphaInfo = getCellInfo(alphaRow[slot]);
+						const betaInfo = getCellInfo(betaRow[slot]);
+
+						const alphaAttrProf = alphaInfo.prof
+							? ` data-prof="${alphaInfo.prof}"`
+							: "";
+						const betaAttrProf = betaInfo.prof
+							? ` data-prof="${betaInfo.prof}"`
+							: "";
+
+						const alphaColspan = alphaSpan > 1 ? ` colspan="${alphaSpan}"` : "";
+						const betaColspan = betaSpan > 1 ? ` colspan="${betaSpan}"` : "";
+
+						tr1 += `<td${alphaColspan} class="${alphaInfo.css}"${alphaAttrProf}>${alphaInfo.html}</td>`;
+						tr2 += `<td${betaColspan} class="${betaInfo.css}"${betaAttrProf}>${betaInfo.html}</td>`;
+
+						slot += Math.max(alphaSpan, betaSpan);
+					}
+				}
+
+				tr1 += `</tr>`;
+				tr2 += `</tr>`;
+
+				return tr1 + tr2;
+			}
+
+			function equalizeRowHeights() {
+				const tbody = document.getElementById("timetableBody");
+				if (!tbody) return;
+				const rows = Array.from(tbody.querySelectorAll("tr"));
+				rows.forEach((r) => (r.style.height = "auto"));
+
+				let maxHeight = 36;
+				rows.forEach((r) => {
+					const h = r.getBoundingClientRect().height;
+					if (h > maxHeight) maxHeight = Math.ceil(h);
+				});
+
+				if (maxHeight > 0) {
+					rows.forEach((r) => (r.style.height = `${maxHeight}px`));
+				}
+			}
+
+			function renderSchedule() {
+				const tbody = document.getElementById("timetableBody");
+				let html = buildSundayRows();
+
+				for (let i = 1; i <= 6; i++) {
+					html += buildDayRows(i);
 				}
 				tbody.innerHTML = html;
 				highlightCurrentClass();
+				setTimeout(equalizeRowHeights, 0);
 			}
 
 			/**
@@ -616,27 +737,51 @@
 				const now = new Date();
 				const curDay = now.getDay();
 				const curTime = now.getHours() * 60 + now.getMinutes();
-				const headers = document.querySelectorAll("thead th");
+				const headers = document.querySelectorAll("thead th[data-start]");
 
-				// Remove existing highlights
+				// Clear existing highlights
 				document
 					.querySelectorAll(".current-class")
 					.forEach((el) => el.classList.remove("current-class"));
 
-				// Find and highlight current time slot
+				let activeSlotIndex = -1;
+				headers.forEach((th, slotIdx) => {
+					if (!th.dataset.start || !th.dataset.end) return;
+					const [startH, startM] = th.dataset.start.split(":").map(Number);
+					const [endH, endM] = th.dataset.end.split(":").map(Number);
+					const startTime = startH * 60 + startM;
+					const endTime = endH * 60 + endM;
+
+					if (curTime >= startTime && curTime < endTime) {
+						activeSlotIndex = slotIdx;
+					}
+				});
+
+				if (activeSlotIndex < 0) return;
+
 				document.querySelectorAll("tbody tr").forEach((row) => {
 					if (parseInt(row.dataset.day) === curDay) {
-						const cells = row.querySelectorAll("td");
-						headers.forEach((th, index) => {
-							if (index === 0 || !th.dataset.start) return;
-							const [startH, startM] = th.dataset.start.split(":").map(Number);
-							const [endH, endM] = th.dataset.end.split(":").map(Number);
+						let slotPointer = 0;
+						row.querySelectorAll("td").forEach((td) => {
 							if (
-								curTime >= startH * 60 + startM &&
-								curTime < endH * 60 + endM
+								td.classList.contains("cell-day") ||
+								td.classList.contains("cell-sec") ||
+								td.classList.contains("day")
 							) {
-								cells[index].classList.add("current-class");
+								return;
 							}
+							const span = td.colSpan || 1;
+							const cellStartSlot = slotPointer;
+							const cellEndSlot = slotPointer + span - 1;
+
+							if (
+								activeSlotIndex >= cellStartSlot &&
+								activeSlotIndex <= cellEndSlot
+							) {
+								td.classList.add("current-class");
+							}
+
+							slotPointer += span;
 						});
 					}
 				});
@@ -644,7 +789,7 @@
 
 			/**
 			 * Toggles faculty filter - highlights classes taught by selected professor
-			 * @param {string} profId - Professor's ID (e.g., 'DB', 'AP')
+			 * @param {string} profId - Professor's ID (e.g., 'SL', 'SS1')
 			 * @param {HTMLElement} btn - The clicked filter button
 			 */
 			function toggleProf(profId, btn) {
@@ -660,23 +805,61 @@
 					document.body.classList.add("filter-active");
 					btn.classList.add("active");
 					document.querySelectorAll("td").forEach((td) => {
-						if (td.innerText.includes(profId))
+						const cellProf = td.dataset.prof;
+						const cellText = td.innerText;
+
+						const isHeaderOrBreak =
+							td.classList.contains("cell-day") ||
+							td.classList.contains("cell-sec") ||
+							td.classList.contains("cell-break") ||
+							td.classList.contains("cell-empty") ||
+							td.classList.contains("day") ||
+							td.classList.contains("break") ||
+							td.classList.contains("holiday");
+
+						const isMatch =
+							(cellProf && cellProf.includes(profId)) ||
+							(cellText && cellText.includes(profId));
+
+						if (isMatch) {
 							td.classList.add("highlight-active");
-						else if (
-							td.innerText !== "---" &&
-							!td.classList.contains("day") &&
-							!td.classList.contains("break") &&
-							!td.classList.contains("holiday") &&
-							!td.classList.contains("no-classes")
-						)
+						} else if (!isHeaderOrBreak) {
 							td.classList.add("dimmed");
+						}
 					});
 				} else {
 					document.body.classList.remove("filter-active");
 				}
 			}
 
+			function toggleTheme() {
+				const currentTheme = document.body.getAttribute("data-theme") || "dark";
+				const newTheme = currentTheme === "dark" ? "light" : "dark";
+				document.body.setAttribute("data-theme", newTheme);
+				localStorage.setItem("theme", newTheme);
+				updateThemeIcon(newTheme);
+			}
+
+			function updateThemeIcon(theme) {
+				const sun = document.getElementById("sunIcon");
+				const moon = document.getElementById("moonIcon");
+				if (theme === "light") {
+					if (sun) sun.style.display = "none";
+					if (moon) moon.style.display = "inline-block";
+				} else {
+					if (sun) sun.style.display = "inline-block";
+					if (moon) moon.style.display = "none";
+				}
+			}
+
+			function initTheme() {
+				const savedTheme = localStorage.getItem("theme") || "dark";
+				document.body.setAttribute("data-theme", savedTheme);
+				updateThemeIcon(savedTheme);
+			}
+
 			// Initialize application
+			initTheme();
 			loadSectionPreference();
 			setInterval(highlightCurrentClass, 30000); // Update every 30 seconds
 		</script>

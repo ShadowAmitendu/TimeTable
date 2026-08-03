@@ -1,25 +1,19 @@
-/* Print styles */
+/* Print styles - Light Cream Theme & Clay Banner */
 @page {
 	size: A4 landscape;
-	margin: 8mm; /* Slightly smaller margin to ensure single-page fit */
+	margin: 8mm;
 }
 
 @media print {
-	/* --- 1. Global Reset --- */
 	body {
-		background: white !important;
-		color: #1a1a1a !important;
+		background: #FDFCF9 !important;
+		color: #1F1E1C !important;
 		-webkit-print-color-adjust: exact;
 		print-color-adjust: exact;
 		margin: 0;
 		padding: 0;
-		/* Kept Inter as requested; falls back to sans-serif if not loaded */
-		font-family:
-			"Inter",
-			system-ui,
-			-apple-system,
-			sans-serif;
-		font-size: 10pt;
+		font-family: 'Inter', system-ui, -apple-system, sans-serif;
+		font-size: 9pt;
 		line-height: 1.2;
 	}
 
@@ -29,147 +23,132 @@
 		text-shadow: none !important;
 	}
 
-	/* Hide UI */
+	/* Hide UI controls */
 	.print-btn,
 	.section-modal,
 	.controls-wrapper,
 	.settings-content,
-	header p {
+	.status-pill {
 		display: none !important;
 	}
 
-	/* --- 2. Compact Header --- */
-	header {
+	#contentArea {
+		max-width: 100% !important;
+		margin: 0 auto !important;
+	}
+
+	/* Header Banner in Print */
+	header.banner-header {
+		background: #CC785C !important;
+		color: #FFFFFF !important;
 		text-align: center;
-		border-bottom: 2px solid #0056b3; /* Professional Blue */
-		margin-bottom: 8px;
-		padding-bottom: 4px;
-	}
-
-	h1 {
-		font-size: 16pt;
-		font-weight: 800;
-		color: #0056b3 !important;
-		text-transform: uppercase;
+		padding: 8px 12px;
 		margin: 0;
-		letter-spacing: 0.5px;
+		border-bottom: 1px solid #3D3B36 !important;
 	}
 
-	h2 {
-		font-size: 10pt;
-		font-weight: 500;
-		margin: 2px 0 0 0;
-		color: #444 !important;
+	header.banner-header h1 {
+		color: #FFFFFF !important;
+		font-size: 14pt;
+		font-weight: 800;
 	}
 
-	/* --- 3. Table Layout --- */
+	/* Table Layout */
 	.table-wrapper {
 		width: 100%;
-		display: block;
+		border: 1px solid #3D3B36 !important;
+		background: #FDFCF9 !important;
 	}
 
-	table {
+	table.timetable-grid {
 		width: 100%;
 		border-collapse: collapse;
-		table-layout: fixed; /* Crucial for one-page fit */
+		table-layout: fixed !important;
 	}
 
-	th,
-	td {
-		border: 1px solid #ccc !important;
+	table.timetable-grid th,
+	table.timetable-grid td {
+		border: 1px solid #CCCCCC !important;
 		padding: 4px 2px;
 		vertical-align: middle;
-		word-wrap: break-word;
-	}
-
-	/* --- 4. Time Slots (The Header Row) --- */
-	thead th {
-		height: 35px;
-		background-color: #f8f9fa !important;
-		color: #0056b3 !important;
-		font-size: 8.5pt;
-		font-weight: 700;
-		border-bottom: 2px solid #0056b3 !important;
-	}
-
-	/* --- 5. Days Column (The Sidebar) --- */
-	th:first-child,
-	td.day,
-	.day {
-		background-color: #f0f4f8 !important; /* Soft tinted gray */
-		color: #0056b3 !important;
-		font-weight: 800 !important;
-		text-transform: uppercase;
-		width: 80px; /* Narrowed to save horizontal space */
-		font-size: 9pt !important;
-	}
-
-	/* --- 6. Data Cells --- */
-	td {
-		height: 42px; /* Fixed height to force one-page fit */
 		text-align: center;
-		background: white !important;
 	}
 
-	.subject-tag {
-		font-size: 10pt;
+	table.timetable-grid thead th {
+		background-color: #F1EAD9 !important;
+		color: #1F1E1C !important;
+		font-size: 8pt;
 		font-weight: 700;
-		color: #000 !important;
-		display: block;
 	}
 
-	.prof-id,
-	.lab-tag {
-		font-size: 8pt;
-		color: #555 !important;
-		font-weight: 400;
+	td.cell-day {
+		background-color: #F1EAD9 !important;
+		color: #1F1E1C !important;
+		font-weight: 800 !important;
 	}
 
-	/* --- 7. Specialized Cells --- */
-	.divider {
-		border: 0;
-		border-top: 1px solid #ddd !important;
-		margin: 3px 0;
+	td.cell-sec {
+		background-color: #E6DFD5 !important;
+		color: #333333 !important;
 	}
 
-	.section-label-cell {
-		font-size: 7pt;
-		background: #e9ecef !important;
-		font-weight: bold;
+	td.cell-empty {
+		background-color: #FDFCF9 !important;
 	}
 
-	/* Break/Holiday patterns */
-	.break,
-	.holiday,
-	.no-classes {
-		background-color: #fafafa !important;
-		background-image: repeating-linear-gradient(
-			45deg,
-			transparent,
-			transparent 10px,
-			#f1f1f1 10px,
-			#f1f1f1 11px
-		) !important;
-		font-size: 8pt;
-		color: #888 !important;
-		letter-spacing: 1px;
+	/* Light Tinted Subject Colors for Print */
+	td.subj-project {
+		background-color: #FBEBE6 !important;
+		color: #A34A2E !important;
 	}
 
-	/* --- 8. Current Class --- */
-	.current-class {
-		background-color: #e7f3ff !important; /* Lightest blue wash */
-		outline: 1.5px solid #0056b3 !important;
-		outline-offset: -1.5px;
+	td.subj-mim701a-ss1 {
+		background-color: #EBF5FB !important;
+		color: #1D6F8A !important;
 	}
 
-	/* --- 9. Footer --- */
-	.status-pill {
-		display: block;
-		width: fit-content;
-		margin: 10px auto 0 auto;
-		padding: 3px 10px;
-		border: 1px solid #ccc !important;
-		font-size: 8pt;
-		color: #666 !important;
+	td.subj-mim701a-am2 {
+		background-color: #EAFAF1 !important;
+		color: #196F3D !important;
+	}
+
+	td.subj-mim701a-rb {
+		background-color: #F4F3FF !important;
+		color: #51429E !important;
+	}
+
+	td.subj-bcac703 {
+		background-color: #FEF9E7 !important;
+		color: #9A7D0A !important;
+	}
+
+	td.subj-bcac701b-701a {
+		background-color: #FDEDEC !important;
+		color: #922B21 !important;
+	}
+
+	td.subj-bcac791b {
+		background-color: #FBEEE6 !important;
+		color: #A04000 !important;
+	}
+
+	td.subj-bcac792 {
+		background-color: #FADBD8 !important;
+		color: #78281F !important;
+	}
+
+	td.subj-bcac702 {
+		background-color: #E8F8F5 !important;
+		color: #117A65 !important;
+	}
+
+	td.subj-bcac791a {
+		background-color: #EAEDED !important;
+		color: #424949 !important;
+	}
+
+	td.cell-break {
+		background-color: #F2F3F4 !important;
+		color: #7F8C8D !important;
 	}
 }

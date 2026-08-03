@@ -111,13 +111,7 @@ export function getSectionDisplayText(section) {
  */
 export function initModal() {
     const savedSection = getSavedSection();
-    if (savedSection) {
-        // Cookie still valid - skip modal, return saved preference
-        hideModal();
-        showContent();
-        return savedSection;
-    }
-    // Cookie expired or not set - show modal
-    showModal();
-    return null;
+    hideModal();
+    showContent();
+    return savedSection;
 }

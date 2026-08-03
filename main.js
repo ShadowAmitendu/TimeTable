@@ -64,14 +64,15 @@ async function init() {
     // Render header (updates document title)
     renderHeader();
 
-    // Check for saved section cookie, show modal if expired
+    // Check for saved section cookie
     const savedSection = initModal();
     if (savedSection) {
-        // Cookie still valid - restore previous selection
         currentSection = savedSection;
         updateSelection(savedSection, getSectionDisplayText(savedSection));
-        renderSchedule(currentSection);
+    } else {
+        currentSection = SECTION.BOTH;
     }
+    renderSchedule(currentSection);
 
     // Initialize print button click handler
     initPrintButton();
@@ -106,11 +107,22 @@ function setupGlobalFunctions() {
      * Toggle settings panel visibility
      */
     window.toggleSettings = function () {
-        const panel = $('settingsPanel');
-        const text = $('toggleText');
-        panel.classList.toggle('show');
-        text.textContent = panel.classList.contains('show') ? 'Hide Options' : 'Options';
+        const modal = $('optionsModal') || document.getElementById('optionsModal');
+        if (modal) {
+            if (modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            } else {
+                modal.style.display = 'flex';
+            }
+        }
     };
+
+    window.addEventListener('click', function (e) {
+        const modal = $('optionsModal') || document.getElementById('optionsModal');
+        if (modal && e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
 
     /**
      * Toggle section dropdown menu
@@ -135,6 +147,30 @@ function setupGlobalFunctions() {
 
     // Expose faculty filter toggle to global scope
     window.toggleProf = toggleProf;
+
+    window.toggleTheme = function () {
+        const currentTheme = document.body.getAttribute('data-theme') || 'dark';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
+    };
+
+    function updateThemeIcon(theme) {
+        const sun = $('sunIcon') || document.getElementById('sunIcon');
+        const moon = $('moonIcon') || document.getElementById('moonIcon');
+        if (theme === 'light') {
+            if (sun) sun.style.display = 'none';
+            if (moon) moon.style.display = 'inline-block';
+        } else {
+            if (sun) sun.style.display = 'inline-block';
+            if (moon) moon.style.display = 'none';
+        }
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.body.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
 }
 
 /**

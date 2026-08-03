@@ -1,68 +1,155 @@
-/* Base styles - CSS variables and reset */
+/* Base styles - Claude Dark Theme & Light Theme Support */
 
 :root {
-    --bg-cream: #FDFCF9;
-    --bg-tan: #F1EAD9;
-    --accent-orange: #D97706;
-    --accent-hover: #B45309;
-    --deep-charcoal: #1E293B;
-    --border-color: #E2E8F0;
-    --text-main: #0F172A;
-    --radius: 16px;
-    --cell-height: 105px;
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+	--brand-clay: #CC785C;
+	--bg-dark: #1F1E1C;
+	--card-bg: #2A2926;
+	--header-bg: #CC785C;
+	--header-text: #FFFFFF;
+	--col-header-bg: #252421;
+	--col-header-text: #B5B0A6;
+	--border-color: #3D3B36;
+	--text-main: #F4F1E8;
+	--radius: 0px;
+
+	/* Subject Color Palette (~9 distinct hues - Dark) */
+	--subj-project-bg: #402920;
+	--subj-project-text: #CC785C;
+
+	--subj-mim701a-ss1-bg: #1B313B;
+	--subj-mim701a-ss1-text: #56B6C2;
+
+	--subj-mim701a-am2-bg: #1B3629;
+	--subj-mim701a-am2-text: #48C78E;
+
+	--subj-mim701a-rb-bg: #272543;
+	--subj-mim701a-rb-text: #9880FF;
+
+	--subj-bcac703-bd-bg: #382E19;
+	--subj-bcac703-bd-text: #E5C07B;
+
+	--subj-bcac701b-rn-701a-ac-bg: #3B1F27;
+	--subj-bcac701b-rn-701a-ac-text: #E06C75;
+
+	--subj-bcac791b-rn-l2-bg: #3D261C;
+	--subj-bcac791b-rn-l2-text: #D19A66;
+
+	--subj-bcac792-ad-l3-bg: #3B1B1E;
+	--subj-bcac792-ad-l3-text: #EF596F;
+
+	--subj-bcac702-ss4-bg: #1F3621;
+	--subj-bcac702-ss4-text: #50C878;
+
+	--subj-bcac791a-ac-l2-bg: #2F2E2B;
+	--subj-bcac791a-ac-l2-text: #ABB2BF;
+
+	--cell-break-bg: #252421;
+	--cell-break-text: #8C877D;
+}
+
+/* Light Theme Variables Override */
+[data-theme='light'] {
+	--bg-dark: #F9F8F6;
+	--card-bg: #FFFFFF;
+	--header-bg: #CC785C;
+	--header-text: #FFFFFF;
+	--col-header-bg: #EFECE6;
+	--col-header-text: #4A4741;
+	--border-color: #E0DACD;
+	--text-main: #1F1E1C;
+
+	/* Subject Color Palette (Light Tints) */
+	--subj-project-bg: #FBEBE6;
+	--subj-project-text: #A34A2E;
+
+	--subj-mim701a-ss1-bg: #EBF5FB;
+	--subj-mim701a-ss1-text: #1D6F8A;
+
+	--subj-mim701a-am2-bg: #EAFAF1;
+	--subj-mim701a-am2-text: #196F3D;
+
+	--subj-mim701a-rb-bg: #F4F3FF;
+	--subj-mim701a-rb-text: #51429E;
+
+	--subj-bcac703-bd-bg: #FEF9E7;
+	--subj-bcac703-bd-text: #9A7D0A;
+
+	--subj-bcac701b-rn-701a-ac-bg: #FDEDEC;
+	--subj-bcac701b-rn-701a-ac-text: #922B21;
+
+	--subj-bcac791b-rn-l2-bg: #FBEEE6;
+	--subj-bcac791b-rn-l2-text: #A04000;
+
+	--subj-bcac792-ad-l3-bg: #FADBD8;
+	--subj-bcac792-ad-l3-text: #78281F;
+
+	--subj-bcac702-ss4-bg: #E8F8F5;
+	--subj-bcac702-ss4-text: #117A65;
+
+	--subj-bcac791a-ac-l2-bg: #EAEDED;
+	--subj-bcac791a-ac-l2-text: #424949;
+
+	--cell-break-bg: #F2F3F4;
+	--cell-break-text: #7F8C8D;
+}
+
+* {
+	box-sizing: border-box;
+	border-radius: 0 !important;
 }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-cream);
-    color: var(--text-main);
-    margin: 0;
-    padding: 15px;
-    -webkit-font-smoothing: antialiased;
-    font-size: 16px;
+	font-family: 'Inter', system-ui, -apple-system, sans-serif;
+	background-color: var(--bg-dark);
+	color: var(--text-main);
+	margin: 0;
+	padding: 20px;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	-webkit-font-smoothing: antialiased;
+	font-size: 13px;
+	transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 h1 {
-    font-size: 1rem;
-    font-weight: 800;
-    color: var(--deep-charcoal);
-    margin: 0;
-    text-transform: uppercase;
+	font-size: 1.25rem;
+	font-weight: 800;
+	color: var(--header-text);
+	margin: 0;
+	letter-spacing: 0.03em;
 }
 
 h2 {
-    font-size: 0.9rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--accent-orange);
-    margin-bottom: 5px;
+	font-size: 0.85rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: var(--header-text);
+	margin: 0;
 }
 
-/* Animations */
 @keyframes pulse {
-    0% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.6;
-    }
-
-    100% {
-        opacity: 1;
-    }
+	0% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+	100% {
+		opacity: 1;
+	}
 }
 
 @keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+	from {
+		opacity: 0;
+		transform: translateY(-6px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
