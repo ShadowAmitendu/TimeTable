@@ -19,14 +19,14 @@
  */
 export const FACULTY = Object.freeze([
 	{ id: "SL", name: "SL (Salt Lake - Training)" },
-	{ id: "SS1", name: "SS1" },
+	{ id: "SS1", name: "Mr. Soumen Kumar Saha" },
 	{ id: "AM2", name: "AM2" },
-	{ id: "BD", name: "BD" },
-	{ id: "RN", name: "RN" },
-	{ id: "AC", name: "AC" },
-	{ id: "RB", name: "RB" },
-	{ id: "SS4", name: "SS4" },
-	{ id: "AD", name: "AD" },
+	{ id: "BD", name: "Mrs. Basabdatta Das" },
+	{ id: "RN", name: "Mr. Rajesh Nag" },
+	{ id: "AC", name: "Mr. Avik Chatterjee" },
+	{ id: "RB", name: "Dr. Rajat Kumar Bhowmick" },
+	{ id: "SS4", name: "Mr. Subhendu Saha" },
+	{ id: "AD", name: "Mr. Akash Das" },
 ]);
 
 /**

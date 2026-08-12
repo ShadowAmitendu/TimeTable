@@ -13,8 +13,83 @@ import { highlightCurrentClass } from '../time/currentClass.js';
 
 let scheduleData = null;
 
+/** Currently selected elective package */
+let currentElective = 'electiveA';
+
 export function setScheduleData(data) {
 	scheduleData = data;
+}
+
+/**
+ * Set the active elective package
+ * @param {'electiveA'|'electiveB'} elective
+ */
+export function setElective(elective) {
+	currentElective = elective;
+}
+
+/**
+ * Get the active elective package
+ * @returns {'electiveA'|'electiveB'}
+ */
+export function getElective() {
+	return currentElective;
+}
+
+/**
+ * Elective A subjects: BCAC701A + BCAC791A (Prof AC)
+ * Elective B subjects: BCAC701B + BCAC791B (Prof RN)
+ * The combined slot "BCAC701B/701A" shows both — we replace it contextually.
+ */
+const ELECTIVE_A_PATTERNS = ['BCAC701A', 'BCAC791A'];
+const ELECTIVE_B_PATTERNS = ['BCAC701B', 'BCAC791B'];
+
+/**
+ * Check if a schedule item belongs to a specific elective group
+ * @param {Object|string} item - Schedule item
+ * @param {string[]} patterns - List of subject codes to match
+ * @returns {boolean}
+ */
+function isElectiveSubject(item, patterns) {
+	if (!item || typeof item === 'string') return false;
+	const s = item.subject || '';
+	// Direct match
+	if (patterns.some(code => s === code)) return true;
+	return false;
+}
+
+/**
+ * Check if item is the combined BCAC701B/701A slot
+ */
+function isCombinedElectiveSlot(item) {
+	if (!item || typeof item === 'string') return false;
+	const s = item.subject || '';
+	return s === 'BCAC701B/701A' || s === 'BCAC701B/BCAC701A';
+}
+
+/**
+ * Filter a row's schedule data based on current elective selection.
+ * - Hides the non-selected elective's standalone classes (replaces with EMPTY)
+ * - Transforms the combined "BCAC701B/701A" slot to show only the selected variant
+ * @param {Array} row - Array of schedule items for a day
+ * @returns {Array} Filtered row
+ */
+function filterElective(row) {
+	if (!row) return row;
+	const hidePatterns = currentElective === 'electiveA' ? ELECTIVE_B_PATTERNS : ELECTIVE_A_PATTERNS;
+	return row.map(item => {
+		// Hide standalone non-selected elective classes
+		if (isElectiveSubject(item, hidePatterns)) return 'EMPTY';
+		// Transform combined slot to show only selected variant
+		if (isCombinedElectiveSlot(item)) {
+			if (currentElective === 'electiveA') {
+				return { prof: 'AC', subject: 'BCAC701A' };
+			} else {
+				return { prof: 'RN', subject: 'BCAC701B' };
+			}
+		}
+		return item;
+	});
 }
 
 function isSameItem(a, b) {
@@ -137,8 +212,8 @@ function buildSundayRows(currentSection) {
 function buildDayRows(dayIndex, currentSection) {
 	if (!scheduleData) return '';
 
-	const alphaRow = scheduleData.alpha[dayIndex] || [];
-	const betaRow = scheduleData.beta[dayIndex] || [];
+	const alphaRow = filterElective(scheduleData.alpha[dayIndex] || []);
+	const betaRow = filterElective(scheduleData.beta[dayIndex] || []);
 	const dayName = DAYS[dayIndex];
 
 	const sec = (currentSection || '').toLowerCase();
@@ -211,11 +286,32 @@ export function equalizeRowHeights() {
 	}
 }
 
+/**
+ * Update the elective tag indicators below the timetable
+ */
+export function updateElectiveTags() {
+	const container = document.getElementById('electiveTags');
+	if (!container) return;
+
+	const isA = currentElective === 'electiveA';
+	container.innerHTML = `
+		<span class="elective-tag ${isA ? 'elective-tag--active' : 'elective-tag--inactive'}">
+			${isA ? '<span class="tag-dot"></span>' : ''}
+			BCAC701 + 791
+		</span>
+		<span class="elective-tag ${!isA ? 'elective-tag--active' : 'elective-tag--inactive'}">
+			${!isA ? '<span class="tag-dot"></span>' : ''}
+			BCAC702 + 792
+		</span>
+	`;
+}
+
 export function renderSchedule(currentSection) {
 	const tbody = $('timetableBody') || document.getElementById('timetableBody');
 	if (!tbody) return;
 
 	updateBannerTitle(currentSection);
+	updateElectiveTags();
 
 	let html = '';
 

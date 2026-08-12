@@ -17,9 +17,9 @@
 
 import { SECTION } from './core/constants.js';
 import { $ } from './core/utils.js';
-import { renderSchedule, setScheduleData } from './features/renderer/table.js';
+import { renderSchedule, setScheduleData, setElective, getElective } from './features/renderer/table.js';
 import { renderHeader } from './features/renderer/header.js';
-import { initModal, hideModal, showContent, getSectionDisplayText, saveSectionPreference } from './features/renderer/modal.js';
+import { initModal, hideModal, showContent, getSectionDisplayText, saveSectionPreference, saveElectivePreference, getSavedElective } from './features/renderer/modal.js';
 import { toggleProf, resetFilters } from './features/filters/facultyFilter.js';
 import { startHighlightInterval } from './features/time/currentClass.js';
 import { initPrintButton } from './features/print/printMode.js';
@@ -72,6 +72,16 @@ async function init() {
     } else {
         currentSection = SECTION.BOTH;
     }
+
+    // Check for saved elective cookie
+    const savedElective = getSavedElective();
+    if (savedElective) {
+        setElective(savedElective);
+        updateElectiveToggleUI(savedElective);
+    } else {
+        setElective('electiveA');
+    }
+
     renderSchedule(currentSection);
 
     // Initialize print button click handler
@@ -100,7 +110,9 @@ function setupGlobalFunctions() {
         showContent();
         currentSection = section;
         updateSelection(section, getSectionDisplayText(section));
-        renderSchedule(currentSection);
+        // Show elective selection modal as step 2
+        const electiveModal = document.getElementById('electiveModal');
+        if (electiveModal) electiveModal.style.display = 'flex';
     };
 
     /**
@@ -171,6 +183,25 @@ function setupGlobalFunctions() {
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.body.setAttribute('data-theme', savedTheme);
     updateThemeIcon(savedTheme);
+
+    // Elective selection from the welcome modal (step 2)
+    window.selectElectiveFromModal = function (elective) {
+        saveElectivePreference(elective);
+        setElective(elective);
+        updateElectiveToggleUI(elective);
+        // Hide the elective modal step
+        const electiveModal = document.getElementById('electiveModal');
+        if (electiveModal) electiveModal.style.display = 'none';
+        renderSchedule(currentSection);
+    };
+
+    // Elective selection from the options modal
+    window.selectElective = function (elective) {
+        saveElectivePreference(elective);
+        setElective(elective);
+        updateElectiveToggleUI(elective);
+        renderSchedule(currentSection);
+    };
 }
 
 /**
@@ -182,6 +213,17 @@ function setupGlobalFunctions() {
 function updateSelection(val, text) {
     $('selectedVal').textContent = text;
     $('selectOptions').classList.remove('show');
+}
+
+/**
+ * Update elective toggle button UI
+ * @param {'electiveA'|'electiveB'} elective
+ * @private
+ */
+function updateElectiveToggleUI(elective) {
+    document.querySelectorAll('.elective-toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.elective === elective);
+    });
 }
 
 // Initialize when DOM is ready

@@ -69,6 +69,25 @@
       </div>
     </div>
 
+    <!-- ======================== Elective Selection Modal ======================== -->
+    <!-- Step 2: Shown after section selection to choose elective package -->
+    <div class="section-modal" id="electiveModal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-title">Choose Your Elective</div>
+        <div class="modal-subtitle">
+          Select which elective package you are enrolled in
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn" onclick="selectElectiveFromModal('electiveA')">
+            Elective A — BCAC701A + BCAC791A
+          </button>
+          <button class="modal-btn" onclick="selectElectiveFromModal('electiveB')">
+            Elective B — BCAC701B + BCAC791B
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- ======================== Options Modal Popup ======================== -->
     <div class="section-modal" id="optionsModal" style="display: none">
       <div class="modal-content options-modal-content">
@@ -154,6 +173,29 @@
             </button>
             <button class="prof-tab" onclick="toggleProf('AD', this)">
               AD
+            </button>
+          </div>
+        </div>
+
+        <!-- Elective Selector -->
+        <div class="settings-row">
+          <span class="settings-label">Switch Elective</span>
+          <div class="elective-toggle-group">
+            <button
+              class="elective-toggle-btn active"
+              data-elective="electiveA"
+              onclick="selectElective('electiveA')"
+            >
+              <span class="elective-label">Elective A</span>
+              <span class="elective-codes">BCAC701A + BCAC791A</span>
+            </button>
+            <button
+              class="elective-toggle-btn"
+              data-elective="electiveB"
+              onclick="selectElective('electiveB')"
+            >
+              <span class="elective-label">Elective B</span>
+              <span class="elective-codes">BCAC701B + BCAC791B</span>
             </button>
           </div>
         </div>
@@ -353,6 +395,23 @@
         <!-- Status indicator showing last update date -->
         <div class="status-pill">
           ROUTINE AS OF DATE: <strong>3rd August 2026</strong>
+        </div>
+        <div class="faculty-legend">
+          <span class="faculty-legend-item"><strong>AC</strong> Mr. Avik Chatterjee</span>
+          <span class="faculty-legend-sep">·</span>
+          <span class="faculty-legend-item"><strong>RN</strong> Mr. Rajesh Nag</span>
+          <span class="faculty-legend-sep">·</span>
+          <span class="faculty-legend-item"><strong>SS1</strong> Mr. Soumen Kumar Saha</span>
+          <span class="faculty-legend-sep">·</span>
+          <span class="faculty-legend-item"><strong>SS4</strong> Mr. Subhendu Saha</span>
+          <span class="faculty-legend-sep">·</span>
+          <span class="faculty-legend-item"><strong>BD</strong> Mrs. Basabdatta Das</span>
+          <span class="faculty-legend-sep">·</span>
+          <span class="faculty-legend-item"><strong>AD</strong> Mr. Akash Das</span>
+          <span class="faculty-legend-sep">·</span>
+          <span class="faculty-legend-item"><strong>AM2</strong> Unknown</span>
+          <span class="faculty-legend-sep">·</span>
+          <span class="faculty-legend-item"><strong>RB</strong> Dr. Rajat Kumar Bhowmick</span>
         </div>
       </div>
     </div>
@@ -575,7 +634,85 @@
         document.getElementById("sectionModal").style.display = "none";
         currentSection = section;
         updateSelection(section, getSectionText(section));
+        // Show elective selection modal as step 2
+        document.getElementById("electiveModal").style.display = "flex";
+      }
+
+      /** @type {'electiveA'|'electiveB'} Currently selected elective package */
+      let currentElective = "electiveA";
+
+      /** Elective cookie name */
+      const ELECTIVE_COOKIE_NAME = "selectedElective";
+
+      /**
+       * Subject codes for each elective group
+       */
+      const ELECTIVE_A_PATTERNS = ["BCAC701A", "BCAC791A"];
+      const ELECTIVE_B_PATTERNS = ["BCAC701B", "BCAC791B"];
+
+      function isElectiveSubject(item, patterns) {
+        if (!item || typeof item === "string") return false;
+        const s = item.subject || "";
+        return patterns.some(code => s === code);
+      }
+
+      function isCombinedElectiveSlot(item) {
+        if (!item || typeof item === "string") return false;
+        const s = item.subject || "";
+        return s === "BCAC701B/701A" || s === "BCAC701B/BCAC701A";
+      }
+
+      function filterElective(row) {
+        if (!row) return row;
+        const hidePatterns = currentElective === "electiveA" ? ELECTIVE_B_PATTERNS : ELECTIVE_A_PATTERNS;
+        return row.map(item => {
+          if (isElectiveSubject(item, hidePatterns)) return "EMPTY";
+          if (isCombinedElectiveSlot(item)) {
+            if (currentElective === "electiveA") {
+              return { prof: "AC", subject: "BCAC701A" };
+            } else {
+              return { prof: "RN", subject: "BCAC701B" };
+            }
+          }
+          return item;
+        });
+      }
+
+      function selectElectiveFromModal(elective) {
+        setCookie(ELECTIVE_COOKIE_NAME, elective, COOKIE_EXPIRY_MINUTES);
+        currentElective = elective;
+        updateElectiveToggleUI(elective);
+        document.getElementById("electiveModal").style.display = "none";
         renderSchedule();
+      }
+
+      function selectElective(elective) {
+        setCookie(ELECTIVE_COOKIE_NAME, elective, COOKIE_EXPIRY_MINUTES);
+        currentElective = elective;
+        updateElectiveToggleUI(elective);
+        renderSchedule();
+      }
+
+      function updateElectiveToggleUI(elective) {
+        document.querySelectorAll(".elective-toggle-btn").forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.elective === elective);
+        });
+      }
+
+      function updateElectiveTags() {
+        const container = document.getElementById("electiveTags");
+        if (!container) return;
+        const isA = currentElective === "electiveA";
+        container.innerHTML = `
+          <span class="elective-tag ${isA ? 'elective-tag--active' : 'elective-tag--inactive'}">
+            ${isA ? '<span class="tag-dot"></span>' : ''}
+            BCAC701 + 791
+          </span>
+          <span class="elective-tag ${!isA ? 'elective-tag--active' : 'elective-tag--inactive'}">
+            ${!isA ? '<span class="tag-dot"></span>' : ''}
+            BCAC702 + 792
+          </span>
+        `;
       }
 
       /** Toggles the settings panel visibility */
@@ -729,8 +866,8 @@
       }
 
       function buildDayRows(dayIndex) {
-        const alphaRow = scheduleData.alpha[dayIndex] || [];
-        const betaRow = scheduleData.beta[dayIndex] || [];
+        const alphaRow = filterElective(scheduleData.alpha[dayIndex] || []);
+        const betaRow = filterElective(scheduleData.beta[dayIndex] || []);
         const days = [
           "Sunday",
           "Monday",
@@ -795,6 +932,7 @@
       function renderSchedule() {
         const tbody = document.getElementById("timetableBody");
         updateBannerTitle(currentSection);
+        updateElectiveTags();
 
         let html = "";
 
@@ -939,6 +1077,12 @@
 
       // Initialize application
       initTheme();
+      // Load elective preference
+      const savedElective = getCookie(ELECTIVE_COOKIE_NAME);
+      if (savedElective) {
+        currentElective = savedElective;
+        updateElectiveToggleUI(savedElective);
+      }
       loadSectionPreference();
       setInterval(highlightCurrentClass, 30000); // Update every 30 seconds
     </script>

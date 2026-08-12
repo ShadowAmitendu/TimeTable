@@ -44,6 +44,38 @@ export function saveSectionPreference(section) {
     setCookie(COOKIE_NAME, section, COOKIE_EXPIRY_MINUTES);
 }
 
+/** Cookie name for elective preference */
+const ELECTIVE_COOKIE_NAME = 'selectedElective';
+
+/**
+ * Save elective preference to cookie
+ * @param {'electiveA'|'electiveB'} elective - Elective package identifier
+ */
+export function saveElectivePreference(elective) {
+    setCookie(ELECTIVE_COOKIE_NAME, elective, COOKIE_EXPIRY_MINUTES);
+}
+
+/**
+ * Get saved elective preference from cookie
+ * @returns {string|null} Saved elective or null if expired/not set
+ */
+export function getSavedElective() {
+    return getCookie(ELECTIVE_COOKIE_NAME);
+}
+
+/**
+ * Get human-readable display text for an elective value
+ * @param {'electiveA'|'electiveB'} elective - Elective identifier
+ * @returns {string} Display text
+ */
+export function getElectiveDisplayText(elective) {
+    const texts = {
+        electiveA: 'Elective A — BCAC701A + BCAC791A',
+        electiveB: 'Elective B — BCAC701B + BCAC791B',
+    };
+    return texts[elective] || texts['electiveA'];
+}
+
 /**
  * Get saved section preference from cookie
  * @returns {string|null} Saved section or null if expired/not set

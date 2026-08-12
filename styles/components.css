@@ -229,3 +229,162 @@
 .status-pill strong {
 	color: var(--brand-clay);
 }
+
+/* Faculty Legend Strip */
+.faculty-legend {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 4px 2px;
+	margin: 8px auto 12px;
+	padding: 6px 14px;
+	max-width: fit-content;
+	font-size: 10px;
+	font-family: 'Inter', sans-serif;
+	color: #8C877D;
+	letter-spacing: 0.02em;
+}
+
+.faculty-legend-item {
+	white-space: nowrap;
+}
+
+.faculty-legend-item strong {
+	color: var(--brand-clay);
+	font-weight: 800;
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 10px;
+	margin-right: 2px;
+}
+
+.faculty-legend-sep {
+	color: #5A564F;
+	margin: 0 4px;
+	font-weight: 700;
+}
+
+[data-theme='light'] .faculty-legend {
+	color: #6B6560;
+}
+
+[data-theme='light'] .faculty-legend-sep {
+	color: #C5BFB5;
+}
+
+/* ======================== Elective Selector ======================== */
+
+/* Elective toggle container inside modal */
+.elective-toggle-group {
+	display: flex;
+	gap: 0;
+	max-width: 340px;
+	margin: 0 auto;
+	border: 1px solid var(--border-color);
+	overflow: hidden;
+}
+
+.elective-toggle-btn {
+	flex: 1;
+	padding: 12px 8px;
+	border: none;
+	background: #252421;
+	color: #B5B0A6;
+	font-weight: 700;
+	font-size: 12px;
+	font-family: 'JetBrains Mono', monospace;
+	cursor: pointer;
+	transition: all 0.25s ease;
+	text-align: center;
+	line-height: 1.4;
+	position: relative;
+}
+
+.elective-toggle-btn:first-child {
+	border-right: 1px solid var(--border-color);
+}
+
+.elective-toggle-btn:hover {
+	background: #302e2b;
+	color: #F4F1E8;
+}
+
+.elective-toggle-btn.active {
+	background: var(--brand-clay);
+	color: #ffffff;
+}
+
+.elective-toggle-btn .elective-label {
+	display: block;
+	font-size: 13px;
+	font-weight: 800;
+	margin-bottom: 2px;
+}
+
+.elective-toggle-btn .elective-codes {
+	display: block;
+	font-size: 10px;
+	opacity: 0.85;
+	font-weight: 500;
+}
+
+[data-theme='light'] .elective-toggle-btn {
+	background: #EFECE6;
+	color: #6B6560;
+}
+
+[data-theme='light'] .elective-toggle-btn:hover {
+	background: #E6DFD5;
+	color: #1F1E1C;
+}
+
+[data-theme='light'] .elective-toggle-btn.active {
+	background: var(--brand-clay);
+	color: #ffffff;
+}
+
+/* Elective tag badges shown next to status pill */
+.elective-tags {
+	display: flex;
+	justify-content: center;
+	gap: 6px;
+	margin: 8px auto 0;
+	flex-wrap: wrap;
+}
+
+.elective-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 3px 10px;
+	background: #252421;
+	border: 1px solid var(--border-color);
+	font-size: 10px;
+	font-weight: 700;
+	font-family: 'JetBrains Mono', monospace;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: #B5B0A6;
+}
+
+.elective-tag .tag-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50% !important;
+	background: var(--brand-clay);
+	display: inline-block;
+}
+
+.elective-tag--active {
+	color: var(--brand-clay);
+	border-color: var(--brand-clay);
+}
+
+.elective-tag--inactive {
+	opacity: 0.35;
+	text-decoration: line-through;
+}
+
+[data-theme='light'] .elective-tag {
+	background: #EFECE6;
+}
